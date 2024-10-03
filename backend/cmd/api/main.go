@@ -12,6 +12,7 @@ import (
 	"github.com/ciarnellicarlo/ps-performance-app/backend/internal/repository"
 	"github.com/ciarnellicarlo/ps-performance-app/backend/internal/services"
 	"github.com/ciarnellicarlo/ps-performance-app/backend/pkg/igdb"
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
 )
@@ -47,13 +48,20 @@ func main() {
 	r.HandleFunc("/", homeHandler).Methods("GET")
 	r.HandleFunc("/search", searchHandler).Methods("GET")
 
-	// Start the server
+	// Set up CORS options
+	corsOptions := handlers.CORS(
+		handlers.AllowedOrigins([]string{"http://localhost:8081"}), // Update with your frontend URL
+		handlers.AllowedMethods([]string{"GET", "POST", "OPTIONS"}),
+		handlers.AllowedHeaders([]string{"Content-Type", "Authorization"}),
+	)
+
+	// Start the server with CORS middleware
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
 	}
 	fmt.Printf("Server is running on port %s\n", port)
-	log.Fatal(http.ListenAndServe(":"+port, r))
+	log.Fatal(http.ListenAndServe(":"+port, corsOptions(r)))
 }
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
