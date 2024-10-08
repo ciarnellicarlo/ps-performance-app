@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://192.168.0.176:8080'; // Replace with your actual backend URL
+const API_BASE_URL = 'http://192.168.0.143:8080'; // Replace with your actual backend URL
 
 export interface Game {
   id: string;

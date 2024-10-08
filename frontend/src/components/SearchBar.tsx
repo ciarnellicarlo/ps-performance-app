@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import { View, TextInput, StyleSheet } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { debounce } from 'lodash';
 
 interface SearchBarProps {
   placeholder: string;
@@ -8,14 +8,28 @@ interface SearchBarProps {
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({ placeholder, onSearch }) => {
+  const [searchText, setSearchText] = useState('');
+
+  const debouncedSearch = useCallback(
+    debounce((text: string) => {
+      onSearch(text);
+    }, 300),
+    [onSearch]
+  );
+
+  const handleTextChange = (text: string) => {
+    setSearchText(text);
+    debouncedSearch(text);
+  };
+
   return (
     <View style={styles.container}>
-      <Ionicons name="logo-playstation" size={24} color="#FFF" style={styles.icon} />
       <TextInput
         style={styles.input}
         placeholder={placeholder}
         placeholderTextColor="#A0A0A0"
-        onChangeText={onSearch}
+        onChangeText={handleTextChange}
+        value={searchText}
       />
     </View>
   );
