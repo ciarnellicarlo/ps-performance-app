@@ -1,4 +1,6 @@
 import React from 'react';
+import { useFonts } from "expo-font";
+import { Poppins_300Light } from "@expo-google-fonts/poppins";
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 
 interface FilterButtonProps {
@@ -10,7 +12,7 @@ interface FilterButtonProps {
 const FilterButton: React.FC<FilterButtonProps> = ({ title, active, onPress }) => {
   return (
     <TouchableOpacity
-      style={[styles.button, active && styles.activeButton]}
+      style={[styles.button, active ? styles.activeButton : styles.inactiveButton]}
       onPress={onPress}
     >
       <Text style={[styles.text, active && styles.activeText]}>{title}</Text>
@@ -20,18 +22,23 @@ const FilterButton: React.FC<FilterButtonProps> = ({ title, active, onPress }) =
 
 const styles = StyleSheet.create({
   button: {
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 20,
-    backgroundColor: '#2B2B3D',
-    marginHorizontal: 5,
+    flex: 1,
+    height: 35,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 20, // Assuming this is the value for var(--RadiusTotal)
   },
   activeButton: {
     backgroundColor: '#CA1395',
   },
+  inactiveButton: {
+    backgroundColor: '#252252',
+  },
   text: {
     color: '#FFF',
     fontSize: 14,
+    fontWeight: '500',
+    fontFamily: 'Poppins_300Light'
   },
   activeText: {
     fontWeight: 'bold',

@@ -7,10 +7,21 @@ interface GameGridProps {
 }
 
 const GameGrid: React.FC<GameGridProps> = ({ games }) => {
+  const getOptimizedImageUrl = (url: string) => {
+    // Ensure the URL has a protocol
+    let fullUrl = url.startsWith('//') ? `https:${url}` : url;
+    if (!fullUrl.startsWith('http')) {
+      fullUrl = `https://${fullUrl}`;
+    }
+
+    // Replace t_thumb with t_cover_big
+    return fullUrl.replace('t_thumb', 't_cover_big');
+  };
+
   const renderItem = ({ item }: { item: Game }) => (
     <View style={styles.gameItem}>
       <Image
-        source={{ uri: item.coverArtURL }}
+        source={{ uri: getOptimizedImageUrl(item.coverArtURL) }}
         style={styles.gameCover}
         resizeMode="cover"
       />
