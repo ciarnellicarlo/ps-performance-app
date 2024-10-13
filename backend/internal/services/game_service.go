@@ -22,6 +22,37 @@ func NewGameService(igdbClient *igdb.Client, gameRepo *repository.GameRepository
 	}
 }
 
+func (s *GameService) GetRandomGames(page, count int) ([]*models.Game, error) {
+    // First, try to get random games from our database
+    localGames, err := s.gameRepo.GetRandomGames(page, count)
+    if err == nil && len(localGames) == count {
+        log.Printf("Found %d random games in local database for page %d", len(localGames), page)
+        return localGames, nil
+    }
+
+    // If we don't have enough games in our database, fetch from IGDB
+    igdbGames, err := s.igdbClient.GetRandomGames(page, count)
+    if err != nil {
+        log.Printf("Error fetching random games from IGDB: %v", err)
+        return nil, err
+    }
+
+    var games []*models.Game
+    for _, igdbGame := range igdbGames {
+        game := convertIGDBToGameModel(&igdbGame)
+        if isPSGame(game) {
+            // Save the game to our database
+            err = s.gameRepo.CreateGame(game)
+            if err != nil {
+                log.Printf("Error saving game to database: %v", err)
+            }
+            games = append(games, game)
+        }
+    }
+
+    return games, nil
+}
+
 func (s *GameService) SearchGame(name string) ([]*models.Game, error) {
 	log.Printf("Searching for game: %s", name)
 

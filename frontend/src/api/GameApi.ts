@@ -8,6 +8,18 @@ export interface Game {
   coverArtURL: string;
 }
 
+export const getRandomGames = async (page: number): Promise<Game[]> => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/random-games`, {
+      params: { page },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching random games:', error);
+    throw error;
+  }
+};
+
 export const searchGames = async (query: string): Promise<Game[]> => {
   try {
     const response = await axios.get(`${API_BASE_URL}/search`, {

@@ -47,6 +47,20 @@ func main() {
 	// Define routes
 	r.HandleFunc("/", homeHandler).Methods("GET")
 	r.HandleFunc("/search", searchHandler).Methods("GET")
+	r.HandleFunc("/random-games", func(w http.ResponseWriter, r *http.Request) {
+		page, _ := strconv.Atoi(r.URL.Query().Get("page"))
+		if page == 0 {
+			page = 1
+		}
+		count := 9 // or however many you want per page
+	
+		games, err := gameService.GetRandomGames(page, count)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		json.NewEncoder(w).Encode(games)
+	})
 
 	// Set up CORS options
 	corsOptions := handlers.CORS(

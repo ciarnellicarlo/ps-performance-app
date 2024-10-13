@@ -1,6 +1,4 @@
 import React from 'react';
-import { useFonts } from "expo-font";
-import { Poppins_300Light } from "@expo-google-fonts/poppins";
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 
 interface FilterButtonProps {

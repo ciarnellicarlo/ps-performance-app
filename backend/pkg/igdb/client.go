@@ -74,43 +74,61 @@ func (c *Client) getAccessToken() error {
 	return nil
 }
 
+func (c *Client) GetRandomGames(page, count int) ([]Game, error) {
+    offset := (page - 1) * count
+    query := fmt.Sprintf(`
+        fields name,summary,first_release_date,cover.url,platforms.name;
+        where platforms = (48,167);
+        sort popularity desc;
+        limit %d;
+        offset %d;
+    `, count, offset)
+
+    return c.executeQuery(query)
+}
+
 func (c *Client) SearchGame(name string) ([]Game, error) {
-	if err := c.getAccessToken(); err != nil {
-		return nil, err
-	}
+    query := fmt.Sprintf(`
+        fields name,summary,first_release_date,cover.url,platforms.name;
+        search "%s";
+        limit 10;
+    `, name)
 
-	url := fmt.Sprintf("%s/games", baseURL)
-	query := fmt.Sprintf(`
-		fields name,summary,first_release_date,cover.url,platforms.name;
-		search "%s";
-		limit 10;
-	`, name)
+    return c.executeQuery(query)
+}
 
-	req, err := http.NewRequest("POST", url, strings.NewReader(query))
-	if err != nil {
-		return nil, fmt.Errorf("error creating request: %v", err)
-	}
+func (c *Client) executeQuery(query string) ([]Game, error) {
+    if err := c.getAccessToken(); err != nil {
+        return nil, err
+    }
 
-	req.Header.Set("Client-ID", c.clientID)
-	req.Header.Set("Authorization", "Bearer "+c.accessToken)
-	req.Header.Set("Accept", "application/json")
-	req.Header.Set("Content-Type", "text/plain")
+    url := fmt.Sprintf("%s/games", baseURL)
 
-	resp, err := c.http.Do(req)
-	if err != nil {
-		return nil, fmt.Errorf("error making request: %v", err)
-	}
-	defer resp.Body.Close()
+    req, err := http.NewRequest("POST", url, strings.NewReader(query))
+    if err != nil {
+        return nil, fmt.Errorf("error creating request: %v", err)
+    }
 
-	if resp.StatusCode != http.StatusOK {
-		body, _ := ioutil.ReadAll(resp.Body)
-		return nil, fmt.Errorf("API request failed with status %d: %s", resp.StatusCode, string(body))
-	}
+    req.Header.Set("Client-ID", c.clientID)
+    req.Header.Set("Authorization", "Bearer "+c.accessToken)
+    req.Header.Set("Accept", "application/json")
+    req.Header.Set("Content-Type", "text/plain")
 
-	var games []Game
-	if err := json.NewDecoder(resp.Body).Decode(&games); err != nil {
-		return nil, fmt.Errorf("error decoding response: %v", err)
-	}
+    resp, err := c.http.Do(req)
+    if err != nil {
+        return nil, fmt.Errorf("error making request: %v", err)
+    }
+    defer resp.Body.Close()
 
-	return games, nil
+    if resp.StatusCode != http.StatusOK {
+        body, _ := ioutil.ReadAll(resp.Body)
+        return nil, fmt.Errorf("API request failed with status %d: %s", resp.StatusCode, string(body))
+    }
+
+    var games []Game
+    if err := json.NewDecoder(resp.Body).Decode(&games); err != nil {
+        return nil, fmt.Errorf("error decoding response: %v", err)
+    }
+
+    return games, nil
 }

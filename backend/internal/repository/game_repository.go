@@ -22,6 +22,23 @@ func NewGameRepository() *GameRepository {
 	}
 }
 
+func (r *GameRepository) GetRandomGames(count int) ([]*models.Game, error) {
+    var games []*models.Game
+    pipeline := []bson.M{
+        {"$sample": bson.M{"size": count}},
+    }
+    cursor, err := r.collection.Aggregate(context.Background(), pipeline)
+    if err != nil {
+        return nil, err
+    }
+    defer cursor.Close(context.Background())
+
+    if err = cursor.All(context.Background(), &games); err != nil {
+        return nil, err
+    }
+    return games, nil
+}
+
 func (r *GameRepository) GetGamesByTitle(title string) ([]*models.Game, error) {
 	var games []*models.Game
 	filter := bson.M{"title": bson.M{"$regex": primitive.Regex{Pattern: title, Options: "i"}}}

@@ -1,6 +1,4 @@
 import React, { useState, useCallback } from 'react';
-import { useFonts } from "expo-font";
-import { Poppins_300Light } from "@expo-google-fonts/poppins";
 import { View, TextInput, StyleSheet } from 'react-native';
 import { debounce } from 'lodash';
 
