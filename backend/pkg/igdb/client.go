@@ -174,3 +174,49 @@ func (c *Client) SearchGame(name string) ([]Game, error) {
 
     return games, nil
 }
+
+func (c *Client) SearchGame(name string) ([]Game, error) {
+    query := fmt.Sprintf(`
+        fields name,summary,first_release_date,cover.url,platforms.name;
+        search "%s";
+        limit 10;
+    `, name)
+
+    return c.executeQuery(query)
+}
+
+func (c *Client) executeQuery(query string) ([]Game, error) {
+    if err := c.getAccessToken(); err != nil {
+        return nil, err
+    }
+
+    url := fmt.Sprintf("%s/games", baseURL)
+
+    req, err := http.NewRequest("POST", url, strings.NewReader(query))
+    if err != nil {
+        return nil, fmt.Errorf("error creating request: %v", err)
+    }
+
+    req.Header.Set("Client-ID", c.clientID)
+    req.Header.Set("Authorization", "Bearer "+c.accessToken)
+    req.Header.Set("Accept", "application/json")
+    req.Header.Set("Content-Type", "text/plain")
+
+    resp, err := c.http.Do(req)
+    if err != nil {
+        return nil, fmt.Errorf("error making request: %v", err)
+    }
+    defer resp.Body.Close()
+
+    if resp.StatusCode != http.StatusOK {
+        body, _ := ioutil.ReadAll(resp.Body)
+        return nil, fmt.Errorf("API request failed with status %d: %s", resp.StatusCode, string(body))
+    }
+
+    var games []Game
+    if err := json.NewDecoder(resp.Body).Decode(&games); err != nil {
+        return nil, fmt.Errorf("error decoding response: %v", err)
+    }
+
+    return games, nil
+}

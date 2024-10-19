@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, TextInput } from 'react-native';
 import { SafeAreaView, StatusBar } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { useFonts, Poppins_400Regular, Poppins_700Bold } from '@expo-google-fonts/poppins';
+import { useFonts, Poppins_300Light } from '@expo-google-fonts/poppins';
 import HomeScreen from '../../src/screens/HomeScreen';
 import * as SplashScreen from 'expo-splash-screen';
 
@@ -22,8 +22,7 @@ SplashScreen.preventAutoHideAsync();
 
 export default function App() {
     const [fontsLoaded] = useFonts({
-      Poppins_400Regular,
-      Poppins_700Bold,
+      Poppins_300Light
     });
 
     React.useEffect(() => {
