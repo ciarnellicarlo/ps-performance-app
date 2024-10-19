@@ -1,0 +1,29 @@
+.button {
+    flex: 1;
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  .activeButton {
+    background-color: #CA1395;
+  }
+  
+  .inactiveButton {
+    background-color: #252252;
+  }
+  
+  .text {
+    color: #FFF;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  
+  .activeText {
+    font-weight: bold;
+  }
