@@ -1,26 +1,23 @@
-import React, { useState, useCallback } from 'react';
-import { debounce } from 'lodash';
+import React, { useState, useEffect } from 'react';
 import styles from '../styles/SearchBar.module.css';
 
 interface SearchBarProps {
   placeholder: string;
   onSearch: (text: string) => void;
+  initialValue: string;
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ placeholder, onSearch }) => {
-  const [searchText, setSearchText] = useState('');
+const SearchBar: React.FC<SearchBarProps> = ({ placeholder, onSearch, initialValue }) => {
+  const [searchText, setSearchText] = useState(initialValue);
 
-  const debouncedSearch = useCallback(
-    debounce((text: string) => {
-      onSearch(text);
-    }, 300),
-    [onSearch]
-  );
+  useEffect(() => {
+    setSearchText(initialValue);
+  }, [initialValue]);
 
   const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const text = e.target.value;
     setSearchText(text);
-    debouncedSearch(text);
+    onSearch(text);
   };
 
   return (

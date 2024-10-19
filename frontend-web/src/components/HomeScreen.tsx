@@ -43,6 +43,23 @@ const HomeScreen: React.FC = () => {
     setIsLoading(false);
   }, [isLoading]);
 
+  const performSearch = useCallback(async (query: string, filter: FilterType) => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const searchResults = await searchGames(query, getConsoleFilter(filter));
+      setGames(searchResults);
+      setHasMore(false);
+      if (searchResults.length === 0) {
+        setError('No games found');
+      }
+    } catch (error) {
+      setError('Error fetching games');
+      console.error('Error fetching games:', error);
+    }
+    setIsLoading(false);
+  }, []);
+
   useEffect(() => {
     if (!initialLoadDone.current) {
       loadGames(1, activeFilter, true);
@@ -53,20 +70,7 @@ const HomeScreen: React.FC = () => {
   const handleSearch = async (searchText: string) => {
     setSearchQuery(searchText);
     if (searchText.length >= 3) {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const searchResults = await searchGames(searchText, getConsoleFilter(activeFilter));
-        setGames(searchResults);
-        setHasMore(false);
-        if (searchResults.length === 0) {
-          setError('No games found');
-        }
-      } catch (error) {
-        setError('Error fetching games');
-        console.error('Error fetching games:', error);
-      }
-      setIsLoading(false);
+      performSearch(searchText, activeFilter);
     } else if (searchText.length === 0) {
       loadGames(1, activeFilter, true);
     }
@@ -84,13 +88,22 @@ const HomeScreen: React.FC = () => {
       setPage(1);
       setHasMore(true);
       setGames([]);
-      loadGames(1, filter, true);
+      
+      if (searchQuery.length >= 3) {
+        performSearch(searchQuery, filter);
+      } else {
+        loadGames(1, filter, true);
+      }
     }
   };
 
   return (
     <div className={styles.container}>
-      <SearchBar placeholder="Type game name here..." onSearch={handleSearch} />
+      <SearchBar 
+        placeholder="Type game name here..." 
+        onSearch={handleSearch}
+        initialValue={searchQuery}
+      />
       <div className={styles.filterWrapper}>
         <FilterButton
           title="PS4 + PS5"
