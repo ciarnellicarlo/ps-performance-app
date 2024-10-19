@@ -21,7 +21,5 @@ type Game struct {
 	ReleaseYear int                `json:"releaseYear" bson:"releaseYear"`
 	Consoles    []string           `json:"consoles" bson:"consoles"`
 	PS4         ConsolePerformance `json:"ps4" bson:"ps4"`
-	PS4Pro      ConsolePerformance `json:"ps4Pro" bson:"ps4Pro"`
 	PS5         ConsolePerformance `json:"ps5" bson:"ps5"`
-	PS5Pro      ConsolePerformance `json:"ps5Pro" bson:"ps5Pro"`
 }

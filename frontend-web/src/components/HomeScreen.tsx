@@ -5,10 +5,10 @@ import GameGrid from './GameGrid';
 import { searchGames, getRandomGames, Game } from '../api/GameApi';
 import styles from '../styles/HomeScreen.module.css';
 
-type FilterType = 'PS5 + PS4' | 'PS4 Only' | 'PS5 Only';
+type FilterType = 'All' | 'PlayStation 4' | 'PlayStation 5';
 
 const HomeScreen: React.FC = () => {
-  const [activeFilter, setActiveFilter] = useState<FilterType>('PS5 + PS4');
+  const [activeFilter, setActiveFilter] = useState<FilterType>('All');
   const [games, setGames] = useState<Game[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -17,15 +17,8 @@ const HomeScreen: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const initialLoadDone = useRef(false);
 
-  const getConsoleFilter = (filter: FilterType) => {
-    switch (filter) {
-      case 'PS4 Only':
-        return 'PS4';
-      case 'PS5 Only':
-        return 'PS5';
-      default:
-        return '';
-    }
+  const getConsoleFilter = (filter: FilterType): string => {
+    return filter === 'All' ? '' : filter;
   };
 
   const loadGames = useCallback(async (pageNum: number, filter: FilterType, isNewFilter: boolean) => {
@@ -100,19 +93,19 @@ const HomeScreen: React.FC = () => {
       <SearchBar placeholder="Type game name here..." onSearch={handleSearch} />
       <div className={styles.filterWrapper}>
         <FilterButton
-          title="PS5 + PS4"
-          active={activeFilter === 'PS5 + PS4'}
-          onPress={() => handleFilterPress('PS5 + PS4')}
+          title="PS4 + PS5"
+          active={activeFilter === 'All'}
+          onPress={() => handleFilterPress('All')}
         />
         <FilterButton
           title="PS4 Only"
-          active={activeFilter === 'PS4 Only'}
-          onPress={() => handleFilterPress('PS4 Only')}
+          active={activeFilter === 'PlayStation 4'}
+          onPress={() => handleFilterPress('PlayStation 4')}
         />
         <FilterButton
           title="PS5 Only"
-          active={activeFilter === 'PS5 Only'}
-          onPress={() => handleFilterPress('PS5 Only')}
+          active={activeFilter === 'PlayStation 5'}
+          onPress={() => handleFilterPress('PlayStation 5')}
         />
       </div>
       {error ? (
