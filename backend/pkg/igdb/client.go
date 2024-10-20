@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"strings"
 	"time"
+	"log"
 )
 
 const (
@@ -72,30 +73,22 @@ func (c *Client) getAccessToken() error {
 	return nil
 }
 
-func (c *Client) SearchGames(query string, isRandom bool) ([]Game, error) {
+func (c *Client) SearchGames(name string, isRandom bool) ([]Game, error) {
 	if err := c.getAccessToken(); err != nil {
 		return nil, fmt.Errorf("error getting access token: %w", err)
 	}
 
 	url := fmt.Sprintf("%s/games", baseURL)
-	var queryStr string
-	if isRandom {
-		queryStr = `
-			fields name,first_release_date,cover.url,platforms.name;
-			where version_parent = null & category = 0 & platforms = (48,167);
-			sort created_at desc;
-			limit 50;
-		`
-	} else {
-		queryStr = fmt.Sprintf(`
-			fields name,first_release_date,cover.url,platforms.name;
-			where version_parent = null & category = 0 & platforms = (48,167);
-			search "%s";
-			limit 50;
-		`, query)
-	}
+	query := fmt.Sprintf(`
+		search "%s";
+		fields name,category,first_release_date,cover.url,platforms.name;
+		where platforms = (48,167) & category = (0,7,8) & version_parent = null;
+		limit 50;
+	`, name)
 
-	req, err := http.NewRequest("POST", url, strings.NewReader(queryStr))
+	log.Printf("IGDB Query: %s", query)
+
+	req, err := http.NewRequest("POST", url, strings.NewReader(query))
 	if err != nil {
 		return nil, fmt.Errorf("error creating request: %w", err)
 	}
@@ -116,6 +109,8 @@ func (c *Client) SearchGames(query string, isRandom bool) ([]Game, error) {
 		return nil, fmt.Errorf("error reading response body: %w", err)
 	}
 
+	log.Printf("IGDB Response: %s", string(body))
+
 	if resp.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("API request failed with status %d: %s", resp.StatusCode, string(body))
 	}
@@ -124,6 +119,8 @@ func (c *Client) SearchGames(query string, isRandom bool) ([]Game, error) {
 	if err := json.Unmarshal(body, &games); err != nil {
 		return nil, fmt.Errorf("error decoding response: %w", err)
 	}
+
+	log.Printf("Parsed %d games from IGDB", len(games))
 
 	return games, nil
 }
