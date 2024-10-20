@@ -12,13 +12,17 @@
     flex: 1;
     color: #FFF;
     font-size: 14px;
+    font-weight: 300;
     padding: 10px 0;
     background: transparent;
     border: none;
     outline: none;
-    font-family: 'Poppins', sans-serif;
   }
   
   .input::placeholder {
     color: #A0A0A0;
+  }
+
+  .playstationLogo {
+    margin-right: 8px
   }

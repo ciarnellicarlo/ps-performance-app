@@ -1,0 +1,15 @@
+// Color Palette
+$accent: #CA1395;
+$page: #17153A;
+$primary: #0E0D1F;
+$secondary: #252252;
+$tertiary: #423D87;
+
+// You can add more variables here as needed, such as:
+$border-radius: 12px;
+$spacing-unit: 8px;
+
+// Function to easily use multiples of the spacing unit
+@function spacing($multiplier) {
+  @return $spacing-unit * $multiplier;
+}

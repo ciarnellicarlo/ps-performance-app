@@ -7,7 +7,7 @@
     border-radius: 20px;
     border: none;
     cursor: pointer;
-    font-family: 'Poppins', sans-serif;
+    font-weight: 300;
   }
   
   .activeButton {
@@ -21,9 +21,4 @@
   .text {
     color: #FFF;
     font-size: 14px;
-    font-weight: 500;
-  }
-  
-  .activeText {
-    font-weight: bold;
   }
