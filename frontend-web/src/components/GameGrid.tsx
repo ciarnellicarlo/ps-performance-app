@@ -1,7 +1,7 @@
 import React, { useCallback, useRef } from 'react';
 import Image from 'next/image';
 import { Game } from '../api/GameApi';
-import styles from '../styles/GameGrid.module.css';
+import styles from '../styles/GameGrid.module.scss';
 
 interface GameGridProps {
   games: Game[];

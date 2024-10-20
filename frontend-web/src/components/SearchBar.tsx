@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import styles from '../styles/SearchBar.module.css';
+import styles from '../styles/SearchBar.module.scss';
 
 
 interface SearchBarProps {

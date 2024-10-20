@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from '../styles/FilterButton.module.css';
+import styles from '../styles/FilterButton.module.scss';
 
 interface FilterButtonProps {
   title: string;

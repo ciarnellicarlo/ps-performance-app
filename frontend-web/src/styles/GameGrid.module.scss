@@ -1,8 +1,16 @@
+@import "variables";
+
 .gridContainer {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  padding: 5px;
+  gap: 16px;
+  background: linear-gradient(to bottom, $secondary 0%, $primary 100%);
+  width: 100%; // Subtracting the total horizontal padding
+  max-width: 1200px; // You can adjust this value as needed
+  padding: 24px 24px;
+  margin-top: 12px; // Center the grid if it's narrower than the screen
+  border-radius: 24px;
+  overflow-y: hidden;
 }
 
 .gameItem {
@@ -53,4 +61,8 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  font-family: var(--font-poppins);
+  font-weight: 300;
 }
