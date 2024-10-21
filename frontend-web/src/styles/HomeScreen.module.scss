@@ -2,6 +2,8 @@
 
 .container {
   flex: 1;
+  padding-top: 60px; // This accounts for the header's height
+  min-height: 100vh;
   background-color: $page;
   display: flex;
   flex-direction: column;

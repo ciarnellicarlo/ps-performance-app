@@ -4,6 +4,7 @@ import FilterButton from './FilterButton';
 import GameGrid from './GameGrid';
 import useGameFetching from '../hooks/useGameFetching';
 import styles from '../styles/HomeScreen.module.scss';
+import Header from './Header';
 
 type FilterType = 'All' | 'PlayStation 4' | 'PlayStation 5';
 
@@ -21,6 +22,7 @@ const HomeScreen: React.FC = () => {
 
   return (
     <div className={styles.container}>
+      <Header />
       <div className={styles.innerContainer}>
       <SearchBar 
         placeholder="Type game name here..." 
