@@ -49,6 +49,7 @@ func main() {
 	r.HandleFunc("/", homeHandler).Methods("GET")
 	r.HandleFunc("/random-games", randomGamesHandler).Methods("GET")
 	r.HandleFunc("/search", searchHandler).Methods("GET")
+	r.HandleFunc("/games/{id}", getGameByIDHandler).Methods("GET")
 
 	// Set up CORS options
 	corsOptions := handlers.CORS(
@@ -105,4 +106,24 @@ func searchHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(games)
+}
+
+func getGameByIDHandler(w http.ResponseWriter, r *http.Request) {
+    vars := mux.Vars(r)
+    id := vars["id"]
+
+    game, err := gameService.GetGameByID(id)
+    if err != nil {
+        log.Printf("Error getting game by ID: %v", err)
+        http.Error(w, "Failed to get game", http.StatusInternalServerError)
+        return
+    }
+
+    if game == nil {
+        http.Error(w, "Game not found", http.StatusNotFound)
+        return
+    }
+
+    w.Header().Set("Content-Type", "application/json")
+    json.NewEncoder(w).Encode(game)
 }

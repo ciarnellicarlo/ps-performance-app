@@ -36,6 +36,10 @@ func (s *GameService) GetRandomGames(page, count int, consoleFilter string) ([]*
 	return games, nil
 }
 
+func (s *GameService) GetGameByID(id string) (*models.Game, error) {
+    return s.gameRepo.GetGameByID(id)
+}
+
 func (s *GameService) SearchGame(name string, consoleFilter string) ([]*models.Game, error) {
 	games, err := s.gameRepo.GetGamesByTitle(name, consoleFilter)
 	if err != nil {

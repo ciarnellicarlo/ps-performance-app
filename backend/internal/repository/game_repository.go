@@ -6,6 +6,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type GameRepository struct {
@@ -72,4 +73,22 @@ func (r *GameRepository) GetGamesByTitle(title string, consoleFilter string) ([]
 	}
 
 	return games, nil
+}
+
+func (r *GameRepository) GetGameByID(id string) (*models.Game, error) {
+    objectID, err := primitive.ObjectIDFromHex(id)
+    if err != nil {
+        return nil, err
+    }
+
+    var game models.Game
+    err = r.collection.FindOne(context.Background(), bson.M{"_id": objectID}).Decode(&game)
+    if err != nil {
+        if err == mongo.ErrNoDocuments {
+            return nil, nil // No game found
+        }
+        return nil, err
+    }
+
+    return &game, nil
 }
