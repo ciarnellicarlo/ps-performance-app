@@ -68,12 +68,7 @@ func (s *GameService) convertAndFilterGames(igdbGames []igdb.Game, consoleFilter
 	var games []*models.Game
 
 	for _, igdbGame := range igdbGames {
-		baseGame := &models.Game{
-			Title:       igdbGame.Name,
-			CoverArtURL: igdbGame.Cover.URL,
-			ReleaseYear: time.Unix(int64(igdbGame.FirstRelease), 0).Year(),
-		}
-
+		// Determine game platform
 		hasPS4, hasPS5 := false, false
 		for _, platform := range igdbGame.Platforms {
 			if platform.Name == "PlayStation 4" {
@@ -83,20 +78,42 @@ func (s *GameService) convertAndFilterGames(igdbGames []igdb.Game, consoleFilter
 			}
 		}
 
-		if hasPS4 && (consoleFilter == "" || consoleFilter == "PS4") {
-			ps4Game := *baseGame
-			ps4Game.Title = fmt.Sprintf("[PS4] %s", ps4Game.Title)
-			ps4Game.Consoles = []string{"PlayStation 4"}
-			ps4Game.PS4 = models.ConsolePerformance{}
-			games = append(games, &ps4Game)
+		// Create PS4 version if available
+		if hasPS4 && (consoleFilter == "" || consoleFilter == "PlayStation 4") {
+			ps4Game := &models.Game{
+				Title:       fmt.Sprintf("[PS4] %s", igdbGame.Name),
+				CoverArtURL: igdbGame.Cover.URL,
+				ReleaseYear: time.Unix(int64(igdbGame.FirstRelease), 0).Year(),
+				Platform:    models.PS4,
+				CompatibleConsoles: make(map[models.ConsoleType]models.ConsolePerformance),
+			}
+
+			// Initialize performance data for all compatible consoles
+			compatibleConsoles := models.GetCompatibleConsoles(models.PS4)
+			for _, consoleType := range compatibleConsoles {
+				ps4Game.CompatibleConsoles[consoleType] = models.NewEmptyConsolePerformance()
+			}
+
+			games = append(games, ps4Game)
 		}
 
-		if hasPS5 && (consoleFilter == "" || consoleFilter == "PS5") {
-			ps5Game := *baseGame
-			ps5Game.Title = fmt.Sprintf("[PS5] %s", ps5Game.Title)
-			ps5Game.Consoles = []string{"PlayStation 5"}
-			ps5Game.PS5 = models.ConsolePerformance{}
-			games = append(games, &ps5Game)
+		// Create PS5 version if available
+		if hasPS5 && (consoleFilter == "" || consoleFilter == "PlayStation 5") {
+			ps5Game := &models.Game{
+				Title:       fmt.Sprintf("[PS5] %s", igdbGame.Name),
+				CoverArtURL: igdbGame.Cover.URL,
+				ReleaseYear: time.Unix(int64(igdbGame.FirstRelease), 0).Year(),
+				Platform:    models.PS5,
+				CompatibleConsoles: make(map[models.ConsoleType]models.ConsolePerformance),
+			}
+
+			// Initialize performance data for compatible consoles
+			compatibleConsoles := models.GetCompatibleConsoles(models.PS5)
+			for _, consoleType := range compatibleConsoles {
+				ps5Game.CompatibleConsoles[consoleType] = models.NewEmptyConsolePerformance()
+			}
+
+			games = append(games, ps5Game)
 		}
 	}
 

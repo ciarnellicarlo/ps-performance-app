@@ -2,11 +2,12 @@ package repository
 
 import (
 	"context"
-	"github.com/ciarnellicarlo/ps-performance-app/backend/internal/models"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"go.mongodb.org/mongo-driver/bson/primitive"
+
+	"github.com/ciarnellicarlo/ps-performance-app/backend/internal/models"
 )
 
 type GameRepository struct {
@@ -31,7 +32,7 @@ func (r *GameRepository) GetRandomGames(page, count int, consoleFilter string) (
 
 	filter := bson.M{}
 	if consoleFilter != "" {
-		filter["consoles"] = consoleFilter
+		filter["platform"] = consoleFilter // Updated to use platform instead of consoles
 	}
 
 	pipeline := []bson.M{
@@ -56,9 +57,17 @@ func (r *GameRepository) GetRandomGames(page, count int, consoleFilter string) (
 }
 
 func (r *GameRepository) GetGamesByTitle(title string, consoleFilter string) ([]*models.Game, error) {
-	filter := bson.M{"title": bson.M{"$regex": title, "$options": "i"}}
+	filter := bson.M{
+		"title": bson.M{
+			"$regex": primitive.Regex{
+				Pattern: title,
+				Options: "i",
+			},
+		},
+	}
+
 	if consoleFilter != "" {
-		filter["consoles"] = consoleFilter
+		filter["platform"] = consoleFilter // Updated to use platform instead of consoles
 	}
 
 	cursor, err := r.collection.Find(context.Background(), filter)
@@ -76,19 +85,19 @@ func (r *GameRepository) GetGamesByTitle(title string, consoleFilter string) ([]
 }
 
 func (r *GameRepository) GetGameByID(id string) (*models.Game, error) {
-    objectID, err := primitive.ObjectIDFromHex(id)
-    if err != nil {
-        return nil, err
-    }
+	objectID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return nil, err
+	}
 
-    var game models.Game
-    err = r.collection.FindOne(context.Background(), bson.M{"_id": objectID}).Decode(&game)
-    if err != nil {
-        if err == mongo.ErrNoDocuments {
-            return nil, nil // No game found
-        }
-        return nil, err
-    }
+	var game models.Game
+	err = r.collection.FindOne(context.Background(), bson.M{"_id": objectID}).Decode(&game)
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			return nil, nil // No game found
+		}
+		return nil, err
+	}
 
-    return &game, nil
+	return &game, nil
 }

@@ -1,7 +1,9 @@
 import React, { useCallback, useRef } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { Game } from '../api/GameApi';
 import styles from '../styles/GameGrid.module.scss';
+import { getOptimizedImageUrl } from '@/utils/images';
 
 interface GameGridProps {
   games: Game[];
@@ -22,32 +24,25 @@ const GameGrid: React.FC<GameGridProps> = ({ games, onLoadMore, isLoading }) => 
     if (node) observer.current.observe(node);
   }, [isLoading, onLoadMore]);
 
-  const getOptimizedImageUrl = (url: string) => {
-    if (!url) return '/default_cover.jpg';
-    let fullUrl = url.startsWith('//') ? `https:${url}` : url;
-    if (!fullUrl.startsWith('http')) {
-      fullUrl = `https://${fullUrl}`;
-    }
-    return fullUrl.replace('t_thumb', 't_cover_big');
-  };
-
   return (
     <div className={styles.gridContainer}>
       {games.map((game, index) => (
-        <div 
-          key={`${game.id}-${index}`} 
+        <Link 
+          href={`/games/${game.id}`} 
+          key={`${game.id}-${index}`}
           className={styles.gameItem}
-          ref={index === games.length - 1 ? lastGameElementRef : null}
         >
-          <Image
-            src={getOptimizedImageUrl(game.coverArtURL)}
-            alt={game.title}
-            layout="fill"
-            objectFit="cover"
-            className={styles.gameCover}
-          />
-          <div className={styles.gameTitle}>{game.title}</div>
-        </div>
+          <div ref={index === games.length - 1 ? lastGameElementRef : null}>
+            <Image
+              src={getOptimizedImageUrl(game.coverArtURL)}
+              alt={game.title}
+              layout="fill"
+              objectFit="cover"
+              className={styles.gameCover}
+            />
+            <div className={styles.gameTitle}>{game.title}</div>
+          </div>
+        </Link>
       ))}
       {isLoading && <div className={styles.loadingMessage}>Loading more games...</div>}
     </div>
