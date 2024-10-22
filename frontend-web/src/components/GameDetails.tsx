@@ -1,6 +1,8 @@
 import Image from 'next/image';
 import { getOptimizedImageUrl } from '@/utils/images';
 import { Game, ConsoleType, ConsolePerformance } from '@/types/game';
+import Header from './Header';
+import styles from '../styles/GameDetails.module.scss';
 
 interface PerformanceDataProps {
   performance: ConsolePerformance;
@@ -52,6 +54,7 @@ const PerformanceData = ({ performance, consoleType }: PerformanceDataProps) => 
 };
 
 export default function GameDetails({ game }: { game: Game }) {
+  const coverArtUrl = getOptimizedImageUrl(game.coverArtURL, 't_720p');
   const compatibleConsoles: ConsoleType[] = 
     game.platform === 'PS4' 
       ? ['PS4', 'PS4 Pro', 'PS5', 'PS5 Pro']
@@ -59,16 +62,22 @@ export default function GameDetails({ game }: { game: Game }) {
 
   return (
     <div className="p-4 max-w-4xl mx-auto">
+      <Header variant="game" title={game.title} />
       <div className="flex flex-col md:flex-row gap-8 mb-8">
-        <div className="w-full md:w-1/3">
+      <div 
+        className={styles.coverArtSection}
+        style={{ '--game-cover': `url(${coverArtUrl})` } as React.CSSProperties}
+      >
+        <div className={styles.coverArtContainer}>
           <Image
-            src={getOptimizedImageUrl(game.coverArtURL)}
+            src={coverArtUrl}
             alt={game.title}
-            width={300}
-            height={400}
-            className="rounded-lg w-full"
+            fill
+            style={{ objectFit: 'cover' }}
+            priority
           />
         </div>
+      </div>
         
         <div className="flex-1">
           <h1 className="text-3xl font-bold mb-4">{game.title}</h1>

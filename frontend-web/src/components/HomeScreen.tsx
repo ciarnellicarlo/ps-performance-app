@@ -22,7 +22,7 @@ const HomeScreen: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      <Header />
+      <Header variant="home" />
       <div className={styles.innerContainer}>
       <SearchBar 
         placeholder="Type game name here..." 

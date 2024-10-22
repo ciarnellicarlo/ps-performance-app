@@ -1,0 +1,36 @@
+.coverArtSection {
+    position: relative;
+    width: 100%;
+    min-height: 45vh; // This makes the section taller
+    padding: 48px 0; // Increased padding to move cover art away from header
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+  
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: var(--game-cover);
+      background-size: cover;
+      background-position: center;
+      filter: blur(20px);
+      opacity: 0.7;
+      z-index: 0;
+    }
+  }
+  
+  .coverArtContainer {
+    position: relative;
+    width: 240px; // Reduced from 300px to make cover art smaller
+    aspect-ratio: 3/4;
+    border-radius: 16px;
+    margin-top: 36px;
+    overflow: hidden;
+    z-index: 1;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  }
