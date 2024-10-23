@@ -69,14 +69,14 @@ func (s *GameService) convertAndFilterGames(igdbGames []igdb.Game, consoleFilter
 
 	for _, igdbGame := range igdbGames {
 		// Determine game platform
-		hasPS4, hasPS5 := false, false
-		for _, platform := range igdbGame.Platforms {
-			if platform.Name == "PlayStation 4" {
-				hasPS4 = true
-			} else if platform.Name == "PlayStation 5" {
-				hasPS5 = true
-			}
-		}
+        hasPS4, hasPS5 := false, false
+        for _, platform := range igdbGame.Platforms {
+            if platform.Name == string(models.PS4) {  // Now matches "PlayStation 4"
+                hasPS4 = true
+            } else if platform.Name == string(models.PS5) {  // Now matches "PlayStation 5"
+                hasPS5 = true
+            }
+        }
 
 		// Create PS4 version if available
 		if hasPS4 && (consoleFilter == "" || consoleFilter == "PlayStation 4") {

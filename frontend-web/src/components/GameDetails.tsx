@@ -3,6 +3,8 @@ import { getOptimizedImageUrl } from '@/utils/images';
 import { Game, ConsoleType, ConsolePerformance } from '@/types/game';
 import Header from './Header';
 import styles from '../styles/GameDetails.module.scss';
+import { GradientContainer } from './GradientContainer';
+import { ConsoleCardList } from './ConsoleCardList';
 
 interface PerformanceDataProps {
   performance: ConsolePerformance;
@@ -56,52 +58,36 @@ const PerformanceData = ({ performance, consoleType }: PerformanceDataProps) => 
 export default function GameDetails({ game }: { game: Game }) {
   const coverArtUrl = getOptimizedImageUrl(game.coverArtURL, 't_720p');
   const compatibleConsoles: ConsoleType[] = 
-    game.platform === 'PS4' 
+    game.platform === 'PlayStation 4' 
       ? ['PS4', 'PS4 Pro', 'PS5', 'PS5 Pro']
       : ['PS5', 'PS5 Pro'];
 
-  return (
-    <div className="p-4 max-w-4xl mx-auto">
-      <Header variant="game" title={game.title} />
-      <div className="flex flex-col md:flex-row gap-8 mb-8">
-      <div 
-        className={styles.coverArtSection}
-        style={{ '--game-cover': `url(${coverArtUrl})` } as React.CSSProperties}
-      >
-        <div className={styles.coverArtContainer}>
-          <Image
-            src={coverArtUrl}
-            alt={game.title}
-            fill
-            style={{ objectFit: 'cover' }}
-            priority
-          />
-        </div>
-      </div>
-        
-        <div className="flex-1">
-          <h1 className="text-3xl font-bold mb-4">{game.title}</h1>
-          <div className="space-y-2 mb-6">
-            <p className="text-gray-300">Release Year: {game.releaseYear}</p>
-            <p className="text-gray-300">Platform: {game.platform}</p>
+      return (
+        <div className="p-4 max-w-4xl mx-auto">
+          <Header variant="game" title={game.title} />
+          <div className="flex flex-col md:flex-row gap-8 mb-8">
+            <div 
+              className={styles.coverArtSection}
+              style={{ '--game-cover': `url(${coverArtUrl})` } as React.CSSProperties}
+            >
+              <div className={styles.coverArtContainer}>
+                <Image
+                  src={coverArtUrl}
+                  alt={game.title}
+                  fill
+                  style={{ objectFit: 'cover' }}
+                  priority
+                />
+              </div>
+            </div>
+            <GradientContainer>
+              <section className={styles.platformInfo}>
+                <h2>{game.platform === 'PlayStation 4' ? 'PlayStation 4' : 'PlayStation 5'}</h2>
+                <time>{game.releaseYear}</time>
+              </section>
+            <ConsoleCardList consoles={compatibleConsoles} />
+            </GradientContainer>
           </div>
         </div>
-      </div>
-
-      <div className="mt-8">
-        <h2 className="text-2xl font-bold mb-6">Performance Data</h2>
-        <div className="grid md:grid-cols-2 gap-4">
-          {compatibleConsoles.map(consoleType => (
-            game.compatibleConsoles[consoleType] && (
-              <PerformanceData
-                key={consoleType}
-                performance={game.compatibleConsoles[consoleType]!}
-                consoleType={consoleType}
-              />
-            )
-          ))}
-        </div>
-      </div>
-    </div>
-  );
+      );
 }

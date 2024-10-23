@@ -5,12 +5,13 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
   background: linear-gradient(to bottom, $secondary 0%, $primary 100%);
-  width: 100%; // Subtracting the total horizontal padding
-  max-width: 1200px; // You can adjust this value as needed
+  width: 100%;
+  max-width: 1200px;
   padding: 24px 24px;
-  margin-top: 12px; // Center the grid if it's narrower than the screen
   border-radius: 24px;
   overflow-y: hidden;
+  min-height: calc(100vh - 190px); // Approximate space for header and search
+  align-content: start; // This is the key change - aligns items to the start
 }
 
 .gameItem {

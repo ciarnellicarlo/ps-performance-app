@@ -82,7 +82,7 @@ func (c *Client) SearchGames(name string, isRandom bool) ([]Game, error) {
 	query := fmt.Sprintf(`
 		search "%s";
 		fields name,category,first_release_date,cover.url,platforms.name;
-		where platforms = (48,167) & category = (0,8,9) & version_parent = null;
+		where platforms = (48,167) & category = (0,8,9) & version_parent = null & status = 0;
 		limit 50;
 	`, name)
 

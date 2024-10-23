@@ -10,7 +10,7 @@ export interface ConsolePerformance {
   standardMode?: Performance;
 }
 
-export type Platform = 'PS4' | 'PS5';
+export type Platform = 'PlayStation 4' | 'PlayStation 5';
 export type ConsoleType = 'PS4' | 'PS4 Pro' | 'PS5' | 'PS5 Pro';
 
 export interface Game {

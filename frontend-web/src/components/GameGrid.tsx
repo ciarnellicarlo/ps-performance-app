@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { Game } from '../api/GameApi';
 import styles from '../styles/GameGrid.module.scss';
 import { getOptimizedImageUrl } from '@/utils/images';
+import { GradientContainer } from './GradientContainer';
 
 interface GameGridProps {
   games: Game[];
@@ -25,7 +26,7 @@ const GameGrid: React.FC<GameGridProps> = ({ games, onLoadMore, isLoading }) => 
   }, [isLoading, onLoadMore]);
 
   return (
-    <div className={styles.gridContainer}>
+    <GradientContainer className={styles.gridContainer}>
       {games.map((game, index) => (
         <Link 
           href={`/games/${game.id}`} 
@@ -45,7 +46,7 @@ const GameGrid: React.FC<GameGridProps> = ({ games, onLoadMore, isLoading }) => 
         </Link>
       ))}
       {isLoading && <div className={styles.loadingMessage}>Loading more games...</div>}
-    </div>
+    </GradientContainer>
   );
 };
 

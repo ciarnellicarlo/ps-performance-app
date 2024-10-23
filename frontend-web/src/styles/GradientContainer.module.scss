@@ -1,0 +1,12 @@
+@import '@/styles/variables';
+
+.container {
+    background: linear-gradient(to bottom, $secondary 0%, $primary 100%);
+    border-radius: 24px;
+    border-bottom-left-radius: 0%;
+    border-bottom-right-radius: 0%;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+  }

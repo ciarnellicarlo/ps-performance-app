@@ -4,8 +4,8 @@ package models
 type Platform string
 
 const (
-	PS4 Platform = "PS4"
-	PS5 Platform = "PS5"
+    PS4 Platform = "PlayStation 4"
+    PS5 Platform = "PlayStation 5"
 )
 
 // ConsoleType represents the specific console variant
