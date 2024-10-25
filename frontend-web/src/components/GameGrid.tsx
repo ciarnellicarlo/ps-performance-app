@@ -28,14 +28,13 @@ const GameGrid: React.FC<GameGridProps> = ({ games, onLoadMore, isLoading }) => 
   return (
     <GradientContainer className={styles.gridContainer}>
       {games.map((game, index) => (
-        <Link 
-          href={`/games/${game.id}`} 
+        <div 
           key={`${game.id}-${index}`}
-          className={styles.gameItem}
+          ref={index === games.length - 1 ? lastGameElementRef : null}
         >
-          <div 
-            ref={index === games.length - 1 ? lastGameElementRef : null}
-            className={styles.coverWrapper}
+          <Link 
+            href={`/games/${game.id}`}
+            className={styles.gameItem}
           >
             <div className={`${styles.platformLogo} ${game.platform === 'PlayStation 4' ? styles.ps4 : styles.ps5}`}>
               <Image
@@ -43,17 +42,19 @@ const GameGrid: React.FC<GameGridProps> = ({ games, onLoadMore, isLoading }) => 
                 alt={game.platform}
                 width={36}
                 height={36}
+                className={styles.platformImage}
               />
             </div>
-            <Image
-              src={getOptimizedImageUrl(game.coverArtURL)}
-              alt={game.title}
-              layout="fill"
-              objectFit="cover"
-              className={styles.gameCover}
-            />
-          </div>
-        </Link>
+            <div className={styles.coverWrapper}>
+              <Image
+                src={getOptimizedImageUrl(game.coverArtURL)}
+                alt={game.title}
+                fill
+                className={styles.gameCover}
+              />
+            </div>
+          </Link>
+        </div>
       ))}
       {isLoading && <div className={styles.loadingMessage}>Loading more games...</div>}
     </GradientContainer>

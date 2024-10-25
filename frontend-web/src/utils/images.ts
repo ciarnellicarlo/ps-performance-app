@@ -1,6 +1,6 @@
 type ImageSize = 't_cover_big' | 't_720p';
 
-export const getOptimizedImageUrl = (url: string, size: ImageSize = 't_cover_big'): string => {
+export const getOptimizedImageUrl = (url: string, size: ImageSize = 't_720p'): string => {
     if (!url) return '/default_cover.jpg';
     let fullUrl = url.startsWith('//') ? `https:${url}` : url;
     if (!fullUrl.startsWith('http')) {
