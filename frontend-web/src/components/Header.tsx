@@ -53,7 +53,19 @@ const Header: React.FC<HeaderProps> = ({ variant, title }) => {
   return (
     <header className={styles.header}>
       <div className={styles.container}>
+        <button className={styles.iconButton} aria-label="Menu">
+          <Image
+            src="/Menu.svg"
+            alt="Menu"
+            width={24}
+            height={24}
+          />
+        </button>
         <div className={styles.userInfo}>
+        <div className={styles.welcomeText}>
+            <p>Welcome</p>
+            <p>User</p>
+          </div>
           <div className={styles.avatarContainer}>
             <Image
               src="/User.svg"
@@ -63,19 +75,7 @@ const Header: React.FC<HeaderProps> = ({ variant, title }) => {
               className={styles.avatarIcon}
             />
           </div>
-          <div className={styles.welcomeText}>
-            <p>Welcome</p>
-            <p>User</p>
-          </div>
         </div>
-        <button className={styles.iconButton} aria-label="Menu">
-          <Image
-            src="/Menu.svg"
-            alt="Menu"
-            width={24}
-            height={24}
-          />
-        </button>
       </div>
     </header>
   );

@@ -19,6 +19,7 @@
     background: transparent;
     border: none;
     outline: none;
+    font-family: var(--font-poppins);
   }
   
   .input::placeholder {
@@ -26,5 +27,5 @@
   }
 
   .playstationLogo {
-    margin-right: 8px
+    margin: 0 8px 0 6px
   }
