@@ -13,8 +13,45 @@
 
 .innerContainer {
   width: calc(100% - 32px); // Subtracting the total horizontal padding
-  max-width: 1200px; // You can adjust this value as needed
   padding: 0 16px;
+}
+
+.mainHeading {
+  text-align: center;
+  color: #FFFFFF;
+  font-family: var(--font-poppins);
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 1.5;
+  margin: 24px 0;
+  margin-left: auto;
+  margin-right: auto;
+
+  @media (min-width: 992px) {
+    font-size: 24px;
+  }
+}
+
+.searchAndFilters {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+
+  @media (min-width: 992px) {
+    flex-direction: row;
+    align-items: center;
+    gap: 16px;
+  }
+}
+
+.searchWrapper {
+  width: 100%;
+
+  @media (min-width: 992px) {
+    flex: 2; // Takes up more space than filters
+  }
 }
 
 .filterWrapper {
@@ -24,9 +61,13 @@
   justify-content: space-between;
   align-items: center;
   padding: 4px;
-  margin: 12px 0 24px 0;
   background-color: $secondary;
   border-radius: 20px;
+
+  @media (min-width: 992px) {
+    flex: 1; // Takes up less space than search
+    margin: 0; // Remove margin as it's handled by gap
+  }
 }
 
 .gridWrapper {

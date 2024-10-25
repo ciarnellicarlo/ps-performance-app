@@ -2,16 +2,22 @@
 
 .gridContainer {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, 1fr); // Default for mobile
   gap: 16px;
   background: linear-gradient(to bottom, $secondary 0%, $primary 100%);
   width: 100%;
-  max-width: 1200px;
-  padding: 24px 24px;
+  margin: 0 auto;
+  padding: 24px;
   border-radius: 24px;
   overflow-y: hidden;
-  min-height: calc(100vh - 190px); // Approximate space for header and search
-  align-content: start; // This is the key change - aligns items to the start
+  min-height: calc(100vh - 190px);
+  align-content: start;
+  margin-top: 12px;
+
+  @media (min-width: 992px) {
+    grid-template-columns: repeat(6, 1fr); // 6 columns for desktop
+    gap: 20px; // Optionally increase gap for better spacing on larger screens
+  }
 }
 
 .gameItem {
