@@ -125,3 +125,36 @@
     background: transparent; // This ensures the image itself has no background
   }
 }
+
+.menuSection {
+  display: flex;
+  align-items: center;
+}
+
+.mobileOnly {
+  @media (min-width: 992px) {
+    display: none;
+  }
+}
+
+.desktopNav {
+  display: none;
+  gap: 32px;
+
+  @media (min-width: 992px) {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.navLink {
+  color: #FFFFFF;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 300;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: $accent;
+  }
+}

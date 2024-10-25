@@ -62,32 +62,34 @@ export default function GameDetails({ game }: { game: Game }) {
       ? ['PS4', 'PS4 Pro', 'PS5', 'PS5 Pro']
       : ['PS5', 'PS5 Pro'];
 
-      return (
-        <div className="p-4 max-w-4xl mx-auto">
-          <Header variant="game" title={game.title} />
-          <div className="flex flex-col md:flex-row gap-8 mb-8">
-            <div 
-              className={styles.coverArtSection}
-              style={{ '--game-cover': `url(${coverArtUrl})` } as React.CSSProperties}
-            >
-              <div className={styles.coverArtContainer}>
-                <Image
-                  src={coverArtUrl}
-                  alt={game.title}
-                  fill
-                  style={{ objectFit: 'cover' }}
-                  priority
-                />
-              </div>
+  return (
+    <>
+      <Header variant="game" title={game.title} />
+      <div className={styles.pageContainer}>
+        <div className={styles.contentContainer}>
+          <div 
+            className={styles.coverArtSection}
+            style={{ '--game-cover': `url(${coverArtUrl})` } as React.CSSProperties}
+          >
+            <div className={styles.coverArtContainer}>
+              <Image
+                src={coverArtUrl}
+                alt={game.title}
+                fill
+                style={{ objectFit: 'cover' }}
+                priority
+              />
             </div>
-            <GradientContainer>
-              <section className={styles.platformInfo}>
-                <h2>{game.platform === 'PlayStation 4' ? 'PlayStation 4' : 'PlayStation 5'}</h2>
-                <time>{game.releaseYear}</time>
-              </section>
-            <ConsoleCardList consoles={compatibleConsoles} />
-            </GradientContainer>
           </div>
+          <GradientContainer className={styles.detailsSection}>
+            <section className={styles.platformInfo}>
+              <h2>{game.platform}</h2>
+              <time>{game.releaseYear}</time>
+            </section>
+            <ConsoleCardList consoles={compatibleConsoles} />
+          </GradientContainer>
         </div>
-      );
+      </div>
+    </>
+  );
 }

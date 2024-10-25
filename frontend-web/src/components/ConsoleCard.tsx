@@ -23,8 +23,8 @@ export const ConsoleCard = ({ consoleName, hasData }: ConsoleCardProps) => {
         <Image
           src={consoleImages[consoleName]}
           alt={`${consoleName} console`}
-          width={200}
-          height={120}
+          width={100}
+          height={60}
           className={styles.consoleImage}
         />
       </div>
