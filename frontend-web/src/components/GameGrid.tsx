@@ -33,7 +33,18 @@ const GameGrid: React.FC<GameGridProps> = ({ games, onLoadMore, isLoading }) => 
           key={`${game.id}-${index}`}
           className={styles.gameItem}
         >
-          <div ref={index === games.length - 1 ? lastGameElementRef : null}>
+          <div 
+            ref={index === games.length - 1 ? lastGameElementRef : null}
+            className={styles.coverWrapper}
+          >
+            <div className={`${styles.platformLogo} ${game.platform === 'PlayStation 4' ? styles.ps4 : styles.ps5}`}>
+              <Image
+                src={game.platform === 'PlayStation 4' ? '/PS4Logo.svg' : '/PS5Logo.svg'}
+                alt={game.platform}
+                width={36}
+                height={36}
+              />
+            </div>
             <Image
               src={getOptimizedImageUrl(game.coverArtURL)}
               alt={game.title}
@@ -41,7 +52,6 @@ const GameGrid: React.FC<GameGridProps> = ({ games, onLoadMore, isLoading }) => 
               objectFit="cover"
               className={styles.gameCover}
             />
-            <div className={styles.gameTitle}>{game.title}</div>
           </div>
         </Link>
       ))}
