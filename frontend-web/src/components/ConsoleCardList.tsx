@@ -1,13 +1,13 @@
-// components/ConsoleCardList.tsx
-import { ConsoleType } from '@/types/game';
+import { ConsoleType, Game } from '@/types/game';
 import { ConsoleCard } from './ConsoleCard';
 import styles from '../styles/ConsoleCardList.module.scss';
 
 type ConsoleCardListProps = {
   consoles: ConsoleType[];
+  game: Game;  // Add game prop to access performance data
 }
 
-export const ConsoleCardList = ({ consoles }: ConsoleCardListProps) => {
+export const ConsoleCardList = ({ consoles, game }: ConsoleCardListProps) => {
   return (
     <div className={styles.container}>
       <div className={styles.scrollArea}>
@@ -15,7 +15,7 @@ export const ConsoleCardList = ({ consoles }: ConsoleCardListProps) => {
           <ConsoleCard
             key={console}
             consoleName={console}
-            hasData={false} // We'll handle this later
+            performance={game.compatibleConsoles[console]}
           />
         ))}
       </div>

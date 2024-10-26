@@ -67,26 +67,40 @@ export default function GameDetails({ game }: { game: Game }) {
       <Header variant="game" title={game.title} />
       <div className={styles.pageContainer}>
         <div className={styles.contentContainer}>
-          <div 
-            className={styles.coverArtSection}
-            style={{ '--game-cover': `url(${coverArtUrl})` } as React.CSSProperties}
-          >
-            <div className={styles.coverArtContainer}>
-              <Image
-                src={coverArtUrl}
-                alt={game.title}
-                fill
-                style={{ objectFit: 'cover' }}
-                priority
-              />
-            </div>
-          </div>
+        <div 
+  className={styles.coverArtSection}
+  style={{ '--game-cover': `url(${coverArtUrl})` } as React.CSSProperties}
+>
+  <div className={styles.coverArtContainer}>
+    <div className={`${styles.platformLogo} ${game.platform === 'PlayStation 4' ? styles.ps4 : styles.ps5}`}>
+      <Image
+        src={game.platform === 'PlayStation 4' ? '/PS4Logo.svg' : '/PS5Logo.svg'}
+        alt={game.platform}
+        width={36}
+        height={36}
+        className={styles.platformImage}
+      />
+    </div>
+    <div className={styles.coverWrapper}>
+      <Image
+        src={coverArtUrl}
+        alt={game.title}
+        fill
+        style={{ objectFit: 'cover' }}
+        priority
+      />
+    </div>
+  </div>
+</div>
           <GradientContainer className={styles.detailsSection}>
             <section className={styles.platformInfo}>
               <h2>{game.platform}</h2>
               <time>{game.releaseYear}</time>
             </section>
-            <ConsoleCardList consoles={compatibleConsoles} />
+            <ConsoleCardList 
+              consoles={compatibleConsoles} 
+              game={game}  // Pass the game object
+            />
           </GradientContainer>
         </div>
       </div>
