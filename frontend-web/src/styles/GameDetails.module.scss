@@ -19,8 +19,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 24px 0;
   height: 45vh;
+  transition: height 0.3s ease-in-out;
+  padding: 24px 0;
   overflow: visible; // Allow background to spill out
   z-index: 0;
   
@@ -40,7 +41,7 @@
 
 .coverArtContainer {
   position: relative;
-  height: 90%;
+  height: 95%;
   aspect-ratio: 3/4;
   border-radius: 10px;
   margin: 0 auto;
@@ -98,4 +99,17 @@
     font-weight: 300;
     color: #A0A0A0;
   }
+}
+
+.coverArtSectionSmall {
+  height: 25vh;
+}
+
+.detailsSection {
+  transition: height 0.3s ease-in-out;
+  flex: 1;
+}
+
+.detailsSectionLarge {
+  height: calc(80vh - 48px); // viewport height minus header
 }

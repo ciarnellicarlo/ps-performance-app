@@ -1,0 +1,92 @@
+// styles/SubmitForm.module.scss
+@import 'variables';
+
+.form {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  font-family: var(--font-poppins);
+  font-size: 18px;
+  font-weight: 300;
+  color: #FFFFFF;
+  text-align: center;
+}
+
+.subtitle {
+  font-family: var(--font-poppins);
+  font-size: 14px;
+  font-weight: 300;
+  margin: 6px 0 12px;
+  color: #A0A0A0;
+  text-align: center;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  label {
+    font-family: var(--font-poppins);
+    font-size: 16px;
+    font-weight: 300;
+    color: #FFFFFF;
+  }
+
+  select {
+    height: 48px;
+    background-color: $page;
+    border: none;
+    border-radius: 8px;
+    padding: 0 16px;
+    color: #FFFFFF;
+    font-family: var(--font-poppins);
+    font-size: 16px;
+    font-weight: 300;
+    appearance: none;
+    background-image: url('/chevron-down.svg');
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    cursor: pointer;
+    border: 1px solid #FFFFFF33;
+
+    &:focus {
+      outline: none;
+      background-color: rgba($secondary, 0.7);
+    }
+  }
+}
+
+.modeSection {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  padding-top: 32px;
+
+  h4 {
+    font-family: var(--font-poppins);
+    font-size: 16px;
+    font-weight: 300;
+    color: #FFFFFF;
+  }
+}
+
+.submitButton {
+  height: 48px;
+  background-color: $accent;
+  border: none;
+  border-radius: 24px;
+  color: #FFFFFF;
+  font-family: var(--font-poppins);
+  font-size: 16px;
+  font-weight: 300;
+  cursor: pointer;
+  margin-top: 16px;
+
+  &:hover {
+    opacity: 0.9;
+  }
+}
