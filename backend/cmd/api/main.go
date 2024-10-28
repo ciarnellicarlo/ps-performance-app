@@ -57,12 +57,8 @@ func main() {
 
     // Set up CORS options
 	corsOptions := handlers.CORS(
-		handlers.AllowedOrigins([]string{
-			os.Getenv("FRONTEND_URL"),
-			"http://localhost:3000",
-			"https://ps-performance-app-pkkr.vercel.app" // Add your Vercel URL when you deploy
-		}),
-		handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}), // Added more methods
+		handlers.AllowedOrigins([]string{os.Getenv("FRONTEND_URL"), "http://localhost:3000", "https://ps-performance-app-pkkr.vercel.app"}),
+		handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}),
 		handlers.AllowedHeaders([]string{
 			"Content-Type", 
 			"Authorization", 
@@ -70,8 +66,8 @@ func main() {
 			"Accept",
 			"Origin",
 		}),
-		handlers.AllowCredentials(), // Add this if you need to send cookies
-		handlers.MaxAge(86400), // Cache preflight requests for 24 hours
+		handlers.AllowCredentials(),
+		handlers.MaxAge(86400),
 	)
 
     // Start the server with CORS middleware
