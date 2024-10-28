@@ -39,8 +39,24 @@ export const getRandomGames = async (page: number, consoleFilter: string): Promi
 // New function for submitting performance data
 export const submitPerformanceData = async (data: PerformanceSubmission): Promise<void> => {
   try {
-    await axios.post(`${API_BASE_URL}/games/${data.gameId}/performance`, data);
+    await axios.post(
+      `${API_BASE_URL}/games/${data.gameId}/performance`, 
+      data,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      }
+    );
   } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error('Detailed error:', {
+        status: error.response?.status,
+        data: error.response?.data,
+        headers: error.response?.headers,
+      });
+    }
     throw new Error(`Failed to submit performance data: ${error}`);
   }
 };

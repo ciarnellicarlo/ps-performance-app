@@ -56,14 +56,23 @@ func main() {
     r.HandleFunc("/games/{id}/performance", updateGamePerformanceHandler).Methods("POST")
 
     // Set up CORS options
-    corsOptions := handlers.CORS(
-        handlers.AllowedOrigins([]string{
-            os.Getenv("FRONTEND_URL"),
-            "http://localhost:3000",
-        }),
-        handlers.AllowedMethods([]string{"GET", "POST", "OPTIONS"}),
-        handlers.AllowedHeaders([]string{"Content-Type", "Authorization"}),
-    )
+	corsOptions := handlers.CORS(
+		handlers.AllowedOrigins([]string{
+			os.Getenv("FRONTEND_URL"),
+			"http://localhost:3000",
+			"https://ps-performance-app.vercel.app", // Add your Vercel URL when you deploy
+		}),
+		handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}), // Added more methods
+		handlers.AllowedHeaders([]string{
+			"Content-Type", 
+			"Authorization", 
+			"X-Requested-With",
+			"Accept",
+			"Origin",
+		}),
+		handlers.AllowCredentials(), // Add this if you need to send cookies
+		handlers.MaxAge(86400), // Cache preflight requests for 24 hours
+	)
 
     // Start the server with CORS middleware
     port := os.Getenv("PORT")
