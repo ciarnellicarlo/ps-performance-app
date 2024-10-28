@@ -24,7 +24,7 @@ const Header: React.FC<HeaderProps> = ({ variant, title }) => {
            className={styles.iconButton}
            aria-label="Go back"
          >
-           <Image src="/Back.svg" alt="Back" width={24} height={24} />
+           <Image src="/back.svg" alt="Back" width={24} height={24} />
          </button>
          <h1 className={styles.gameTitle}>{title}</h1>
          <button 
@@ -32,7 +32,7 @@ const Header: React.FC<HeaderProps> = ({ variant, title }) => {
            className={styles.iconButton}
            aria-label="Share"
          >
-           <Image src="/Share.svg" alt="Share" width={24} height={24} />
+           <Image src="/share.svg" alt="Share" width={24} height={24} />
          </button>
        </div>
      </header>
