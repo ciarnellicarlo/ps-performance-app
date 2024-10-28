@@ -1,14 +1,14 @@
 @import '@/styles/variables';
 
 .container {
-    background: linear-gradient(to bottom, $secondary 0%, $primary 100%);
-    border-radius: 24px 24px 0 0;
-    width: 100%;
-    overflow: hidden;
-    position: relative;
-    z-index: 1;
-    flex: 1; // Take up remaining space
-    display: flex; // Add this
-    flex-direction: column; // Add this to allow children to also flex
-    min-height: 100%; // Ensure it takes at least full height
-  }
+  background: linear-gradient(to bottom, $secondary 0%, $primary 100%);
+  border-radius: 24px 24px 0 0;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  display: flex; 
+  flex-direction: column;
+  min-height: 100%; 
+}

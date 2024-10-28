@@ -23,3 +23,14 @@ export interface Game {
     [key in ConsoleType]: ConsolePerformance;
   };
 }
+
+export interface PerformanceSubmission {
+  gameId: string;
+  consoleType: ConsoleType;
+  consolePerformance: {
+    hasGraphicsSettings: boolean;
+    performanceMode: Performance;
+    fidelityMode?: Performance;
+    standardMode?: Performance;
+  }
+}

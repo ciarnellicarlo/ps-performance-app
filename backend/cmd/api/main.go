@@ -12,6 +12,7 @@ import (
 	"github.com/ciarnellicarlo/ps-performance-app/backend/internal/database"
 	"github.com/ciarnellicarlo/ps-performance-app/backend/internal/repository"
 	"github.com/ciarnellicarlo/ps-performance-app/backend/internal/services"
+	"github.com/ciarnellicarlo/ps-performance-app/backend/internal/models"
 	"github.com/ciarnellicarlo/ps-performance-app/backend/pkg/igdb"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
@@ -50,6 +51,7 @@ func main() {
 	r.HandleFunc("/random-games", randomGamesHandler).Methods("GET")
 	r.HandleFunc("/search", searchHandler).Methods("GET")
 	r.HandleFunc("/games/{id}", getGameByIDHandler).Methods("GET")
+	r.HandleFunc("/games/{id}/performance", updateGamePerformanceHandler).Methods("POST")
 
 	// Set up CORS options
 	corsOptions := handlers.CORS(
@@ -126,4 +128,35 @@ func getGameByIDHandler(w http.ResponseWriter, r *http.Request) {
 
     w.Header().Set("Content-Type", "application/json")
     json.NewEncoder(w).Encode(game)
+}
+
+func updateGamePerformanceHandler(w http.ResponseWriter, r *http.Request) {
+    vars := mux.Vars(r)
+    id := vars["id"]
+
+    // Define request structure using models
+    var requestData struct {
+        ConsoleType        models.ConsoleType       `json:"consoleType"`
+        ConsolePerformance models.ConsolePerformance `json:"consolePerformance"`
+    }
+
+    if err := json.NewDecoder(r.Body).Decode(&requestData); err != nil {
+        log.Printf("Error decoding performance data: %v", err)
+        http.Error(w, "Invalid request body", http.StatusBadRequest)
+        return
+    }
+
+    // Create the update data
+    updateData := map[string]interface{}{
+        fmt.Sprintf("compatibleConsoles.%s", requestData.ConsoleType): requestData.ConsolePerformance,
+    }
+
+    err := gameService.UpdateGamePerformance(id, updateData)
+    if err != nil {
+        log.Printf("Error updating game performance: %v", err)
+        http.Error(w, "Failed to update game performance", http.StatusInternalServerError)
+        return
+    }
+
+    w.WriteHeader(http.StatusOK)
 }

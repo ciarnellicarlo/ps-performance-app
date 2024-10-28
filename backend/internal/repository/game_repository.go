@@ -101,3 +101,16 @@ func (r *GameRepository) GetGameByID(id string) (*models.Game, error) {
 
 	return &game, nil
 }
+
+func (r *GameRepository) UpdateGamePerformance(gameID string, updateData map[string]interface{}) error {
+    objectID, err := primitive.ObjectIDFromHex(gameID)
+    if err != nil {
+        return err
+    }
+
+    filter := bson.M{"_id": objectID}
+    update := bson.M{"$set": updateData}
+
+    _, err = r.collection.UpdateOne(context.Background(), filter, update)
+    return err
+}

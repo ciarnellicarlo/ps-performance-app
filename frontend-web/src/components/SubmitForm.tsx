@@ -1,28 +1,19 @@
-// components/SubmitForm.tsx
 'use client';
 
 import { useState } from 'react';
 import { ConsoleType } from '@/types/game';
+import { submitPerformanceData } from '@/services/api';
+import { PerformanceSubmission } from '@/types/game'
 import styles from '../styles/SubmitForm.module.scss';
 
 interface SubmitFormProps {
+  gameId: string;
   consoleName: ConsoleType;
-  onSubmit: (data: FormData) => void;
+  onSubmit: (data: PerformanceSubmission) => void;  // Now accepts the submission data
 }
 
-type FormData = {
-  hasGraphicsSettings: boolean;
-  performanceMode: {
-    fps: number;
-    resolution: string;
-  };
-  fidelityMode?: {
-    fps: number;
-    resolution: string;
-  };
-};
-
-export const SubmitForm = ({ consoleName, onSubmit }: SubmitFormProps) => {
+export const SubmitForm = ({ gameId, consoleName, onSubmit }: SubmitFormProps) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasGraphicsSettings, setHasGraphicsSettings] = useState<boolean>(false);
 
   const [performanceFPS, setPerformanceFPS] = useState<string>('30');
@@ -31,23 +22,41 @@ export const SubmitForm = ({ consoleName, onSubmit }: SubmitFormProps) => {
   const [fidelityFPS, setFidelityFPS] = useState<string>('30');
   const [fidelityResolution, setFidelityResolution] = useState<string>('1080p');
 
-  const handleSubmit = () => {
-    const formData: FormData = {
-      hasGraphicsSettings,
-      performanceMode: {
-        fps: parseInt(performanceFPS),
-        resolution: performanceResolution
-      }
-    };
-
-    if (hasGraphicsSettings) {
-      formData.fidelityMode = {
-        fps: parseInt(fidelityFPS),
-        resolution: fidelityResolution
+  const handleSubmit = async () => {
+    try {
+      setIsSubmitting(true);
+  
+      const submissionData: PerformanceSubmission = {
+        gameId,
+        consoleType: consoleName,
+        consolePerformance: {
+          hasGraphicsSettings,
+          performanceMode: {
+            fps: parseInt(performanceFPS),
+            resolution: performanceResolution
+          },
+          ...(hasGraphicsSettings && {
+            fidelityMode: {
+              fps: parseInt(fidelityFPS),
+              resolution: fidelityResolution
+            }
+          }),
+          ...(!hasGraphicsSettings && {
+            standardMode: {
+              fps: parseInt(performanceFPS),
+              resolution: performanceResolution
+            }
+          })
+        }
       };
+  
+      await submitPerformanceData(submissionData);
+      onSubmit(submissionData);
+    } catch (error) {
+      console.error('Failed to submit performance data:', error);
+    } finally {
+      setIsSubmitting(false);
     }
-
-    onSubmit(formData);
   };
 
   return (
@@ -123,9 +132,10 @@ export const SubmitForm = ({ consoleName, onSubmit }: SubmitFormProps) => {
       <button 
         className={styles.submitButton}
         onClick={handleSubmit}
+        disabled={isSubmitting}
       >
-        Submit
-      </button>
+      {isSubmitting ? 'Submitting...' : 'Submit'}
+    </button>
     </div>
   );
 };

@@ -119,3 +119,7 @@ func (s *GameService) convertAndFilterGames(igdbGames []igdb.Game, consoleFilter
 
 	return games
 }
+
+func (s *GameService) UpdateGamePerformance(gameID string, updateData map[string]interface{}) error {
+    return s.gameRepo.UpdateGamePerformance(gameID, updateData)
+}

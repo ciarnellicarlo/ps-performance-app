@@ -10,9 +10,12 @@ import styles from '../styles/GameDetails.module.scss';
 import { GradientContainer } from './GradientContainer';
 import { ConsoleCardList } from './ConsoleCardList';
 import { SubmitForm } from './SubmitForm';
+import { PerformanceSubmission } from '@/types/game';
+import { SubmissionSuccess } from './SubmissionSuccess';
 
 export default function GameDetails({ game }: { game: Game }) {
   const [isSubmitView, setIsSubmitView] = useState(false);
+  const [isSubmissionSuccess, setIsSubmissionSuccess] = useState(false);
   const [selectedConsole, setSelectedConsole] = useState<ConsoleType | null>(null);
   const coverArtUrl = getOptimizedImageUrl(game.coverArtURL, 't_720p');
   const compatibleConsoles: ConsoleType[] = 
@@ -20,10 +23,16 @@ export default function GameDetails({ game }: { game: Game }) {
       ? ['PS4', 'PS4 Pro', 'PS5', 'PS5 Pro']
       : ['PS5', 'PS5 Pro'];
 
-  const handleSubmitClick = (consoleType: ConsoleType) => {
-    setSelectedConsole(consoleType);
-    setIsSubmitView(true);
-  };
+      const handleSubmitClick = (consoleType: ConsoleType) => {
+        setSelectedConsole(consoleType);
+        setIsSubmitView(true);
+      };
+
+      const handleBackToHome = () => {
+        // You can either redirect to home or just reset the view
+        setIsSubmitView(false);
+        setIsSubmissionSuccess(false);
+      };
 
   return (
     <>
@@ -72,16 +81,24 @@ export default function GameDetails({ game }: { game: Game }) {
               </>
             ) : (
               <div className={styles.submitView}>
-{isSubmitView && selectedConsole && (
-      <SubmitForm 
-        consoleName={selectedConsole}
-        onSubmit={(data) => {
-          // Handle form submission
-          console.log(data);
-        }}
-      />
-    )}
-              </div>
+              {isSubmissionSuccess ? (
+                <SubmissionSuccess 
+                  title={game.title}
+                  onBackToHome={handleBackToHome}
+                />
+              ) : (
+                isSubmitView && selectedConsole && (
+                  <SubmitForm 
+                    gameId={game.id}
+                    consoleName={selectedConsole}
+                    onSubmit={(data: PerformanceSubmission) => {
+                      console.log(data);
+                      setIsSubmissionSuccess(true);
+                    }}
+                  />
+                )
+              )}
+            </div>
             )}
           </GradientContainer>
         </div>
