@@ -28,3 +28,5 @@ export const getRandomGames = async (page: number, consoleFilter: string): Promi
     return [];
   }
 };
+
+export type { Game };
