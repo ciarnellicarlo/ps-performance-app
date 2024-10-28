@@ -60,7 +60,7 @@ func main() {
 		handlers.AllowedOrigins([]string{
 			os.Getenv("FRONTEND_URL"),
 			"http://localhost:3000",
-			"https://ps-performance-app-pkkr.vercel.app/" // Add your Vercel URL when you deploy
+			"https://ps-performance-app-pkkr.vercel.app" // Add your Vercel URL when you deploy
 		}),
 		handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}), // Added more methods
 		handlers.AllowedHeaders([]string{
