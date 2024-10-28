@@ -22,51 +22,58 @@ import (
 var gameService *services.GameService
 
 func main() {
-	// Load .env file
-	envPath := filepath.Join("..", "..", ".env")
-	if err := godotenv.Load(envPath); err != nil {
-		log.Printf("Warning: .env file not found in %s", envPath)
-	}
+    // Load .env file only in development
+    if os.Getenv("GO_ENV") != "production" {
+        envPath := filepath.Join("..", "..", ".env")
+        if err := godotenv.Load(envPath); err != nil {
+            log.Printf("Warning: .env file not found in %s", envPath)
+        }
+    }
 
-	// Initialize IGDB client
-	clientID := os.Getenv("TWITCH_CLIENT_ID")
-	clientSecret := os.Getenv("TWITCH_CLIENT_SECRET")
-	if clientID == "" || clientSecret == "" {
-		log.Fatal("TWITCH_CLIENT_ID and TWITCH_CLIENT_SECRET must be set in .env file")
-	}
-	igdbClient := igdb.NewClient(clientID, clientSecret)
+    // Initialize IGDB client
+    clientID := os.Getenv("TWITCH_CLIENT_ID")
+    clientSecret := os.Getenv("TWITCH_CLIENT_SECRET")
+    if clientID == "" || clientSecret == "" {
+        log.Fatal("TWITCH_CLIENT_ID and TWITCH_CLIENT_SECRET must be set in .env file")
+    }
+    igdbClient := igdb.NewClient(clientID, clientSecret)
 
-	// Connect to MongoDB
-	database.ConnectToMongoDB()
+    // Connect to MongoDB
+    database.ConnectToMongoDB()
 
-	// Initialize repository and service
-	gameRepo := repository.NewGameRepository(database.GetCollection("games"))
-	gameService = services.NewGameService(igdbClient, gameRepo)
+    // Initialize repository and service
+    gameRepo := repository.NewGameRepository(database.GetCollection("games"))
+    gameService = services.NewGameService(igdbClient, gameRepo)
 
-	// Create a new router
-	r := mux.NewRouter()
+    // Create a new router
+    r := mux.NewRouter()
 
-	// Define routes
-	r.HandleFunc("/", homeHandler).Methods("GET")
-	r.HandleFunc("/random-games", randomGamesHandler).Methods("GET")
-	r.HandleFunc("/search", searchHandler).Methods("GET")
-	r.HandleFunc("/games/{id}", getGameByIDHandler).Methods("GET")
-	r.HandleFunc("/games/{id}/performance", updateGamePerformanceHandler).Methods("POST")
+    // Define routes
+    r.HandleFunc("/", homeHandler).Methods("GET")
+    r.HandleFunc("/random-games", randomGamesHandler).Methods("GET")
+    r.HandleFunc("/search", searchHandler).Methods("GET")
+    r.HandleFunc("/games/{id}", getGameByIDHandler).Methods("GET")
+    r.HandleFunc("/games/{id}/performance", updateGamePerformanceHandler).Methods("POST")
 
-	// Set up CORS options
-	corsOptions := handlers.CORS(
-		handlers.AllowedOrigins([]string{"http://localhost:3000"}), // Update with your frontend URL
-		handlers.AllowedMethods([]string{"GET", "POST", "OPTIONS"}),
-		handlers.AllowedHeaders([]string{"Content-Type", "Authorization"}),
-	)
+    // Set up CORS options
+    corsOptions := handlers.CORS(
+        handlers.AllowedOrigins([]string{
+            os.Getenv("FRONTEND_URL"),
+            "http://localhost:3000",
+        }),
+        handlers.AllowedMethods([]string{"GET", "POST", "OPTIONS"}),
+        handlers.AllowedHeaders([]string{"Content-Type", "Authorization"}),
+    )
 
-	// Start the server with CORS middleware
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080"
-	}
-	fmt.Printf("Server is running on port %s\n", port)
-	log.Fatal(http.ListenAndServe(":"+port, corsOptions(r)))
+    // Start the server with CORS middleware
+    port := os.Getenv("PORT")
+    if port == "" {
+        port = "8080"
+    }
+
+    addr := "0.0.0.0:" + port
+    fmt.Printf("Server is running on %s\n", addr)
+    log.Fatal(http.ListenAndServe(addr, corsOptions(r)))
 }
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
