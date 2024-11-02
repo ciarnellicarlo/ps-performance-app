@@ -20,81 +20,14 @@
 }
 
 .container {
-    width: calc(100% - 32px);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    @media (min-width: 992px) {
-      width: calc(100% - 64px);
-    }
-  }
-
-// ... rest of the styles remain the same
-
-.userInfo {
+  width: calc(100% - 32px);
   display: flex;
-  align-items: center;
-}
-
-.avatarContainer {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background-color: $accent;
-  display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
 
   @media (min-width: 992px) {
-    height: 40px;
-    width: 40px;
+    width: calc(100% - 64px);
   }
-}
-
-.avatarIcon {
-  width: 18px;
-  height: 18px;
-
-  @media (min-width: 992px) {
-    height: 23px;
-    width: 23px;
-  }
-}
-
-.welcomeText {
-  display: flex;
-  flex-direction: column;
-  margin-right: 12px;
-
-  p {
-    margin: 0;
-    font-size: 10px;
-    line-height: 15px;
-    font-weight: 300;
-
-    @media (min-width: 992px) {
-      line-height: 21px;
-    }
-
-    &:first-child {
-      color: #A0A0A0;
-
-      @media (min-width: 992px) {
-        font-size: 12px;
-      }
-    }
-
-    &:last-child {
-      @media (min-width: 992px) {
-        font-size: 14px;
-      }
-    }
-  }
-}
-
-.menuIcon {
-  cursor: pointer;
 }
 
 .gameTitle {
@@ -122,11 +55,11 @@
   color: $accent;
   
   img {
-    background: transparent; // This ensures the image itself has no background
+    background: transparent;
   }
 }
 
-.menuSection {
+.navigation {
   display: flex;
   align-items: center;
 }
