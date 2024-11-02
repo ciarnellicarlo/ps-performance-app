@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { Game } from '@/types/game';  // Import the Game interface
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080';
+import { API_BASE_URL } from '@/config/config';
 
 // Remove type definitions since they should be in /types/game.ts
 

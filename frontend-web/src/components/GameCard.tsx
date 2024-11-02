@@ -6,11 +6,20 @@ import styles from '../styles/GameCard.module.scss';
 
 interface GameCardProps {
   game: Game;
+  isSearching: boolean;
 }
 
-export const GameCard = ({ game }: GameCardProps) => (
-  <Link href={`/games/${game.id}`} className={styles.gameItem}>
-    <div className={`${styles.platformLogo} ${game.platform === 'PlayStation 4' ? styles.ps4 : styles.ps5}`}>
+export const GameCard = ({ game, isSearching }: GameCardProps) => (
+  <Link 
+    href={`/games/${game.id}`} 
+    className={`${styles.gameItem} ${isSearching ? styles.disabled : ''}`}
+    onClick={(e) => {
+      if (isSearching || !game.id) {
+        e.preventDefault();
+      }
+    }}
+  >
+        <div className={`${styles.platformLogo} ${game.platform === 'PlayStation 4' ? styles.ps4 : styles.ps5}`}>
       <Image
         src={game.platform === 'PlayStation 4' ? '/PS4Logo.svg' : '/PS5Logo.svg'}
         alt={game.platform}

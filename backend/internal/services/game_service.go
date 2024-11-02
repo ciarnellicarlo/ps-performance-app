@@ -41,27 +41,36 @@ func (s *GameService) GetGameByID(id string) (*models.Game, error) {
 }
 
 func (s *GameService) SearchGame(name string, consoleFilter string) ([]*models.Game, error) {
-	games, err := s.gameRepo.GetGamesByTitle(name, consoleFilter)
-	if err != nil {
-		log.Printf("Error searching games in database: %v", err)
-	}
+    games, err := s.gameRepo.GetGamesByTitle(name, consoleFilter)
+    if err != nil {
+        log.Printf("Error searching games in database: %v", err)
+    }
 
-	if len(games) == 0 {
-		igdbGames, err := s.igdbClient.SearchGames(name, false)
-		if err != nil {
-			return nil, fmt.Errorf("error searching IGDB: %w", err)
-		}
+    if len(games) == 0 {
+        igdbGames, err := s.igdbClient.SearchGames(name, false)
+        if err != nil {
+            return nil, fmt.Errorf("error searching IGDB: %w", err)
+        }
 
-		games = s.convertAndFilterGames(igdbGames, consoleFilter)
+        games = s.convertAndFilterGames(igdbGames, consoleFilter)
 
-		for _, game := range games {
-			if err := s.gameRepo.UpsertGame(game); err != nil {
-				log.Printf("Error storing game in database: %v", err)
-			}
-		}
-	}
+        // Store games and get their MongoDB IDs
+        var storedGames []*models.Game
+        for _, game := range games {
+            storedGame, err := s.gameRepo.UpsertGame(game)
+            if err != nil {
+                log.Printf("Error storing game in database: %v", err)
+                continue
+            }
+            if storedGame != nil {
+                storedGames = append(storedGames, storedGame)
+            }
+        }
+        
+        return storedGames, nil // Return the stored games with proper IDs
+    }
 
-	return games, nil
+    return games, nil
 }
 
 func (s *GameService) convertAndFilterGames(igdbGames []igdb.Game, consoleFilter string) []*models.Game {

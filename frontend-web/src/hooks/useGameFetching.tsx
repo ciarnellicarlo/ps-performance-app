@@ -11,10 +11,26 @@ const useGameFetching = (initialFilter: FilterType = 'All') => {
   const [hasMore, setHasMore] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState<FilterType>(initialFilter);
+  const [isSearching, setIsSearching] = useState(false);
   const initialLoadDone = useRef(false);
 
   const getConsoleFilter = (filter: FilterType): string => {
     return filter === 'All' ? '' : filter;
+  };
+
+  const handleSearch = async (searchText: string) => {
+    try {
+      setIsSearching(true);
+      setSearchQuery(searchText);
+      
+      if (searchText.length >= 3) {
+        await performSearch(searchText, activeFilter);
+      } else if (searchText.length === 0) {
+        await loadGames(1, activeFilter, true);
+      }
+    } finally {
+      setIsSearching(false);
+    }
   };
 
   const loadGames = useCallback(async (pageNum: number, filter: FilterType, isNewFilter: boolean) => {
@@ -44,6 +60,10 @@ const useGameFetching = (initialFilter: FilterType = 'All') => {
     setError(null);
     try {
       const searchResults = await searchGames(query, getConsoleFilter(filter));
+      console.log('Search Results:', searchResults); // Log the results
+      if (searchResults && searchResults.length > 0) {
+        console.log('First game ID:', searchResults[0].id); // Check the ID
+      }
       setGames(searchResults);
       setHasMore(false);
       if (searchResults.length === 0) {
@@ -52,8 +72,10 @@ const useGameFetching = (initialFilter: FilterType = 'All') => {
     } catch (error) {
       setError('Error fetching games');
       console.error('Error fetching games:', error);
+    } finally {
+      setIsLoading(false);
+      setIsSearching(false);
     }
-    setIsLoading(false);
   }, []);
 
   useEffect(() => {
@@ -62,15 +84,6 @@ const useGameFetching = (initialFilter: FilterType = 'All') => {
       initialLoadDone.current = true;
     }
   }, [activeFilter, loadGames]);
-
-  const handleSearch = async (searchText: string) => {
-    setSearchQuery(searchText);
-    if (searchText.length >= 3) {
-      performSearch(searchText, activeFilter);
-    } else if (searchText.length === 0) {
-      loadGames(1, activeFilter, true);
-    }
-  };
 
   const handleLoadMore = () => {
     if (!isLoading && hasMore && games.length > 0) {
@@ -102,7 +115,8 @@ const useGameFetching = (initialFilter: FilterType = 'All') => {
     searchQuery,
     handleSearch,
     handleLoadMore,
-    handleFilterPress
+    handleFilterPress,
+    isSearching,
   };
 };
 

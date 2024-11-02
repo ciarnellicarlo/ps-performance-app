@@ -17,7 +17,8 @@ const HomeScreen: React.FC = () => {
     searchQuery,
     handleSearch,
     handleLoadMore,
-    handleFilterPress
+    handleFilterPress,
+    isSearching
   } = useGameFetching();
 
   return (
@@ -57,7 +58,12 @@ const HomeScreen: React.FC = () => {
         {error ? (
           <div className={styles.message}>{error}</div>
         ) : (
-          <GameGrid games={games} onLoadMore={handleLoadMore} isLoading={isLoading} />
+          <GameGrid 
+  games={games} 
+  onLoadMore={handleLoadMore} 
+  isLoading={isLoading}
+  isSearching={isSearching}
+/>
         )}
       </div>
   );

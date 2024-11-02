@@ -10,9 +10,10 @@ interface GameGridProps {
   games: Game[];
   onLoadMore: () => void;
   isLoading: boolean;
+  isSearching: boolean;  // Add this
 }
 
-export const GameGrid = ({ games, onLoadMore, isLoading }: GameGridProps) => {
+export const GameGrid = ({ games, onLoadMore, isLoading, isSearching }: GameGridProps) => {
   const observer = useRef<IntersectionObserver | null>(null);
   
   const lastGameElementRef = useCallback((node: HTMLDivElement | null) => {
@@ -33,7 +34,7 @@ export const GameGrid = ({ games, onLoadMore, isLoading }: GameGridProps) => {
           key={`${game.id}-${index}`}
           ref={index === games.length - 1 ? lastGameElementRef : null}
         >
-          <GameCard game={game} />
+          <GameCard game={game} isSearching={isSearching} />
         </div>
       ))}
       {isLoading && <div className={styles.loadingMessage}>Loading more games...</div>}

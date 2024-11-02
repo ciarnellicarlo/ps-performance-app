@@ -18,13 +18,26 @@ func NewGameRepository(collection *mongo.Collection) *GameRepository {
 	return &GameRepository{collection: collection}
 }
 
-func (r *GameRepository) UpsertGame(game *models.Game) error {
-	filter := bson.M{"title": game.Title}
-	update := bson.M{"$set": game}
-	opts := options.Update().SetUpsert(true)
+func (r *GameRepository) UpsertGame(game *models.Game) (*models.Game, error) {
+    filter := bson.M{"title": game.Title}
+    update := bson.M{"$set": game}
+    opts := options.FindOneAndUpdate().
+        SetUpsert(true).
+        SetReturnDocument(options.After)
 
-	_, err := r.collection.UpdateOne(context.Background(), filter, update, opts)
-	return err
+    var result models.Game
+    err := r.collection.FindOneAndUpdate(
+        context.Background(),
+        filter,
+        update,
+        opts,
+    ).Decode(&result)
+
+    if err != nil {
+        return nil, err
+    }
+
+    return &result, nil
 }
 
 func (r *GameRepository) GetRandomGames(page, count int, consoleFilter string) ([]*models.Game, error) {
