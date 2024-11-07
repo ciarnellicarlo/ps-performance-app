@@ -14,8 +14,52 @@
   }
 }
 
+.spinner {
+  display: block;
+}
+
 .loadingMessage {
   text-align: center;
   grid-column: 1 / -1;
   color: #fff;
+}
+
+.initialLoadingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  text-align: center;
+  padding: 32px;
+}
+
+.loadingSpinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top-color: #CA1395;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+.loadingText {
+  font-size: 18px;
+  color: #FFFFFF;
+  margin: 0;
+  font-family: var(--font-poppins);
+}
+
+.loadingSubtext {
+  font-size: 14px;
+  color: #A0A0A0;
+  margin-top: 8px;
+  display: block;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }

@@ -21,6 +21,8 @@ const HomeScreen: React.FC = () => {
     isSearching
   } = useGameFetching();
 
+  const isInitialLoad = isLoading && games.length === 0;
+
   return (
     <div className={styles.container}>
       <Header variant="home" />
@@ -63,6 +65,7 @@ const HomeScreen: React.FC = () => {
   onLoadMore={handleLoadMore} 
   isLoading={isLoading}
   isSearching={isSearching}
+  isInitialLoad={isInitialLoad}
 />
         )}
       </div>
