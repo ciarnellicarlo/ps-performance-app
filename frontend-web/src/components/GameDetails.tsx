@@ -1,38 +1,79 @@
 'use client';
 
 import { useState } from 'react';
-
 import Image from 'next/image';
 import { getOptimizedImageUrl } from '@/utils/images';
-import { Game, ConsoleType } from '@/types/game';
+import { Game, ConsoleType, PerformanceSubmission } from '@/types/game';
+import { useGameData } from '@/hooks/useGameData';
 import Header from './Header';
 import styles from '../styles/GameDetails.module.scss';
 import { GradientContainer } from './GradientContainer';
 import { ConsoleCardList } from './ConsoleCardList';
 import { SubmitForm } from './SubmitForm';
-import { PerformanceSubmission } from '@/types/game';
 import { SubmissionSuccess } from './SubmissionSuccess';
 
-export default function GameDetails({ game }: { game: Game }) {
+const GameCoverArt = ({ platform, coverArtUrl }: { platform: Game['platform']; coverArtUrl: string }) => (
+  <div className={styles.coverArtContainer}>
+    <div className={`${styles.platformLogo} ${platform === 'PlayStation 4' ? styles.ps4 : styles.ps5}`}>
+      <Image
+        src={platform === 'PlayStation 4' ? '/PS4Logo.svg' : '/PS5Logo.svg'}
+        alt={platform}
+        width={36}
+        height={36}
+        className={styles.platformImage}
+      />
+    </div>
+    <div className={styles.coverWrapper}>
+      <Image
+        src={coverArtUrl}
+        alt="Game Cover"
+        fill
+        style={{ objectFit: 'cover' }}
+        priority
+      />
+    </div>
+  </div>
+);
+
+export default function GameDetails({ game: initialGame }: { game: Game }) {
   const [isSubmitView, setIsSubmitView] = useState(false);
   const [isSubmissionSuccess, setIsSubmissionSuccess] = useState(false);
   const [selectedConsole, setSelectedConsole] = useState<ConsoleType | null>(null);
+
+  const {
+    game,
+    isLoading,
+    error,
+    submitPerformance
+  } = useGameData(initialGame);
+
   const coverArtUrl = getOptimizedImageUrl(game.coverArtURL, 't_720p');
   const compatibleConsoles: ConsoleType[] = 
     game.platform === 'PlayStation 4' 
       ? ['PS4', 'PS4 Pro', 'PS5', 'PS5 Pro']
       : ['PS5', 'PS5 Pro'];
 
-      const handleSubmitClick = (consoleType: ConsoleType) => {
-        setSelectedConsole(consoleType);
-        setIsSubmitView(true);
-      };
+  const handleSubmitClick = (consoleType: ConsoleType) => {
+    setSelectedConsole(consoleType);
+    setIsSubmitView(true);
+  };
 
-      const handleBackToHome = () => {
-        // You can either redirect to home or just reset the view
-        setIsSubmitView(false);
-        setIsSubmissionSuccess(false);
-      };
+  const handleBackToHome = async () => {
+    setIsSubmitView(false);
+    setIsSubmissionSuccess(false);
+    setSelectedConsole(null);
+  };
+
+  const handleSubmitSuccess = async (data: PerformanceSubmission) => {
+    const success = await submitPerformance(data);
+    if (success) {
+      setIsSubmissionSuccess(true);
+    }
+  };
+
+  if (error) {
+    return <div>Error loading game data</div>;
+  }
 
   return (
     <>
@@ -43,27 +84,9 @@ export default function GameDetails({ game }: { game: Game }) {
             className={`${styles.coverArtSection} ${isSubmitView ? styles.coverArtSectionSmall : ''}`}
             style={{ '--game-cover': `url(${coverArtUrl})` } as React.CSSProperties}
           >
-  <div className={styles.coverArtContainer}>
-    <div className={`${styles.platformLogo} ${game.platform === 'PlayStation 4' ? styles.ps4 : styles.ps5}`}>
-      <Image
-        src={game.platform === 'PlayStation 4' ? '/PS4Logo.svg' : '/PS5Logo.svg'}
-        alt={game.platform}
-        width={36}
-        height={36}
-        className={styles.platformImage}
-      />
-    </div>
-    <div className={styles.coverWrapper}>
-      <Image
-        src={coverArtUrl}
-        alt={game.title}
-        fill
-        style={{ objectFit: 'cover' }}
-        priority
-      />
-    </div>
-  </div>
-  </div>
+            <GameCoverArt platform={game.platform} coverArtUrl={coverArtUrl} />
+          </div>
+
           <GradientContainer 
             className={`${styles.detailsSection} ${isSubmitView ? styles.detailsSectionLarge : ''}`}
           >
@@ -73,32 +96,30 @@ export default function GameDetails({ game }: { game: Game }) {
                   <h2>{game.platform}</h2>
                   <time>{game.releaseYear}</time>
                 </section>
-    <ConsoleCardList 
-      consoles={compatibleConsoles} 
-      game={game}
-      onSubmitClick={handleSubmitClick}  // Pass the console type up
-    />
+                <ConsoleCardList 
+                  consoles={compatibleConsoles} 
+                  game={game}
+                  onSubmitClick={handleSubmitClick}
+                />
               </>
             ) : (
               <div className={styles.submitView}>
-              {isSubmissionSuccess ? (
-                <SubmissionSuccess 
-                  title={game.title}
-                  onBackToHome={handleBackToHome}
-                />
-              ) : (
-                isSubmitView && selectedConsole && (
-                  <SubmitForm 
-                    gameId={game.id}
-                    consoleName={selectedConsole}
-                    onSubmit={(data: PerformanceSubmission) => {
-                      console.log(data);
-                      setIsSubmissionSuccess(true);
-                    }}
+                {isSubmissionSuccess ? (
+                  <SubmissionSuccess 
+                    title={game.title}
+                    onBackToHome={handleBackToHome}
+                    isLoading={isLoading}
                   />
-                )
-              )}
-            </div>
+                ) : (
+                  isSubmitView && selectedConsole && (
+                    <SubmitForm 
+                      gameId={game.id}
+                      consoleName={selectedConsole}
+                      onSubmit={handleSubmitSuccess}
+                    />
+                  )
+                )}
+              </div>
             )}
           </GradientContainer>
         </div>

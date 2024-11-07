@@ -4,13 +4,17 @@ import Image from 'next/image';
 import styles from '../styles/SubmissionSuccess.module.scss';
 
 interface SubmissionSuccessProps {
-  title: string;
-  onBackToHome: () => void;
-}
+    title: string;
+    onBackToHome: () => void;
+    isLoading?: boolean;
+  }
 
-export const SubmissionSuccess = ({ title, onBackToHome }: SubmissionSuccessProps) => {
-  return (
-<div className={styles.container}>
+  export const SubmissionSuccess = ({ 
+    title, 
+    onBackToHome,
+    isLoading 
+  }: SubmissionSuccessProps) => (
+    <div className={styles.container}>
   <div className={styles.contentSection}>
     <h1 className={styles.heading}>Submission Sent!</h1>
     <p className={styles.subheading}>Thanks for your contribution!</p>
@@ -27,11 +31,12 @@ export const SubmissionSuccess = ({ title, onBackToHome }: SubmissionSuccessProp
   </div>
 
   <button 
-    className={styles.backButton}
-    onClick={onBackToHome}
-  >
-    Back To Homepage
-  </button>
+      className={styles.backButton}
+      onClick={onBackToHome}
+      disabled={isLoading}
+    >
+      {isLoading ? 'Updating...' : 'Back To Homepage'}
+    </button>
 </div>
   );
-};
+;
