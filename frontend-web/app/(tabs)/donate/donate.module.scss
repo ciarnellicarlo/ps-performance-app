@@ -1,0 +1,63 @@
+@import '@/styles/variables';
+
+.pageContainer {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding-top: 48px;
+  margin: 0 auto;
+}
+
+.content {
+  padding: 32px;
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+
+  h1 {
+    font-size: 32px;
+    font-weight: 300;
+    color: #FFFFFF;
+    margin-bottom: 32px;
+  }
+}
+
+.message {
+  font-size: 18px;
+  line-height: 1.6;
+  color: #A0A0A0;
+  margin-bottom: 48px;
+}
+
+.futureFeatures {
+  text-align: left;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 24px;
+
+  h2 {
+    font-size: 24px;
+    font-weight: 300;
+    color: #FFFFFF;
+    margin-bottom: 16px;
+  }
+
+  ul {
+    list-style-type: none;
+    padding: 0;
+
+    li {
+      color: #A0A0A0;
+      margin-bottom: 12px;
+      padding-left: 24px;
+      position: relative;
+
+      &::before {
+        content: '→';
+        position: absolute;
+        left: 0;
+        color: $accent;
+      }
+    }
+  }
+}
